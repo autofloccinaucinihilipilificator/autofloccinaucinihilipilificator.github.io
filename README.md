@@ -12,3 +12,5 @@ Later:
 - Dynamically add rows to the set builder when zoomed
 - Add folders to the set builder
 - Add an edit set button
+- Add settings
+- Add explainer
