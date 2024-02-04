@@ -147,7 +147,8 @@ body {
 
         #word-display p {
             text-align: center;
-            vertical-align: middle
+            vertical-align: middle;
+            padding: 40px;
         }
 
         #prompt-display {

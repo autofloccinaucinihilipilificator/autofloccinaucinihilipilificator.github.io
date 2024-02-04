@@ -9,7 +9,8 @@ Now:
 
 Later: 
 - Make things appear better at high zooms
-- Dynamically add rows to the set builder when zoomed
+- Make things appear better for other devices
+- Dynamically add rows to the set builder
 - Add folders to the set builder
 - Add an edit set button
 - Add settings
