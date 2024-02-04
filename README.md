@@ -1,6 +1,8 @@
 # VocabPracticeTool
 
-A rudimentary website to help people (mostly myself) practice vocab.
+A rudimentary website to help people (mostly myself) practice vocab. Click [here](https://autofloccinaucinihilipilificator.github.io./) to open.
+
+ to open.
 
 ## TO-DO
 
