@@ -159,37 +159,106 @@
             </div>
             <div id="settings" class="box">
                 <h1 class="title" id="settings-title">Settings</h1>
-                TBA
+                <div id="settings-content">
+                    <div id="select-terms-div">
+                        <h1 class="title" id="select-terms-title">Select Terms</h1>
+                        <form id="select-terms-form">
+                            <table>
+                                <tr id="select-terms-header-row">
+                                    <th class="select-terms-header" id="select-header-terms">Term</th>
+                                    <th class="select-terms-header" id="select-header-defs">Definition</th>
+                                    <th id="select-header-checkboxes"></th>
+                                </tr>
+                                <tr>
+                                    <td><label for="0">0</label></td>
+                                    <td>defs</td>
+                                    <td>
+                                        <input id="0" type="checkbox" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><label for="1">1</label></td>
+                                    <td>defs</td>
+                                    <td>
+                                        <input id="1" type="checkbox" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><label for="2">2</label></td>
+                                    <td>defs</td>
+                                    <td>
+                                        <input id="2" type="checkbox" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><label for="3">3</label></td>
+                                    <td>defs</td>
+                                    <td>
+                                        <input id="3" type="checkbox" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><label for="4">4</label></td>
+                                    <td>defs</td>
+                                    <td>
+                                        <input id="4" type="checkbox" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><label for="5">5</label></td>
+                                    <td>defs</td>
+                                    <td>
+                                        <input id="5" type="checkbox" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><label for="6">6</label></td>
+                                    <td>defs</td>
+                                    <td>
+                                        <input id="6" type="checkbox" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><label for="7">7</label></td>
+                                    <td>defs</td>
+                                    <td>
+                                        <input id="7" type="checkbox" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="explainer" class="box">
             <h1 class="title" id="explainer-title">Explainer</h1>
             TBA
         </div>
-    </div>
-    <div id="set-builder">
-        <h1 class="title" id="set-builder-title">New Set</h1>
-        <form id="new-set-form">
-            <div id="new-set-title">
-                <label for="new-set-title-input">Title</label>
-                <input id="new-set-title-input" placeholder="Add title" autocomplete="off"/>
-            </div>
-            <div id="new-set-description">
-                <label for="new-set-description-input">Description</label>
-                <textarea id="new-set-description-input" placeholder="Add description (optional)"></textarea>
-            </div>
-            <div id="new-set-data">
-                <label for="new-set-data-input">Term data</label>
-                <textarea id="new-set-data-input" placeholder="Add set data
+        <div id="set-builder">
+            <h1 class="title" id="set-builder-title">New Set</h1>
+            <form id="new-set-form">
+                <div id="new-set-title">
+                    <label for="new-set-title-input">Title</label>
+                    <input id="new-set-title-input" placeholder="Add title" autocomplete="off" />
+                </div>
+                <div id="new-set-description">
+                    <label for="new-set-description-input">Description</label>
+                    <textarea id="new-set-description-input" placeholder="Add description (optional)"></textarea>
+                </div>
+                <div id="new-set-data">
+                    <label for="new-set-data-input">Term data</label>
+                    <textarea id="new-set-data-input" placeholder="Add set data
 Example:
 Term 1; Definition 1
 Valid Term 2, Other Valid Term 2; Valid Definition 2, Other Valid Definition 2"></textarea>
+                </div>
+            </form>
+            <div id="set-builder-bottom-bar">
+                <button id="save-new-set">Save set</button>
+                <button id="exit-set-builder">Exit without saving</button>
             </div>
-        </form>
-        <div id="set-builder-bottom-bar">
-            <button id="save-new-set">Save set</button>
-            <button id="exit-set-builder">Exit without saving</button>
         </div>
     </div>
-    <script src="VocabPracticeTool.js"></script>
+    <script src="./ts/VocabPracticeTool.js"></script>
 </body>

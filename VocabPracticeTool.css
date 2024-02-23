@@ -1,4 +1,6 @@
-﻿* {
+﻿/* CSS - General ------------------------------------------------------------ */
+
+* {
     --site-background-color: rgb(20, 30, 50);
     --box-background-color: rgb(80, 90, 120);
     --box-border-color: rgb(0, 0, 0);
@@ -17,7 +19,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    overflow: hidden;
     color: var(--text-color);
 }
 
@@ -25,11 +26,13 @@ body {
     display: flex;
     justify-content: center;
     background-color: var(--site-background-color);
+    overflow-x: hidden;
 }
 
 #container {
     box-sizing: border-box;
     margin: 1%;
+    margin-bottom: -2%;
     height: 98%;
     width: 98%;
     max-width: 2500px;
@@ -49,18 +52,24 @@ body {
 
 .title {
     font-weight: normal;
-    font-size: 24px;
+    font-size: 1.5em;
     background-color: var(--title-background-color);
-    padding: 3px;
+    padding: 6px;
     height: 40px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
 }
+
+/* Set explorer ------------------------------------------------------------ */
 
 #set-explorer {
     height: 98vh;
     max-height: 3400px;
     flex: 1;
     display: grid;
-    grid-template-rows: 40px calc(100% - 100px) 60px;
+    grid-template-rows: 40px calc(100% - 104px) 64px;
+    min-width: 68px;
+    max-width: 98%;
 }
 
     #set-explorer-title {
@@ -81,7 +90,7 @@ body {
 
         #set-explorer table button {
             background-color: transparent;
-            font-size: 12px;
+            font-size: 0.8em;
             height: 24px;
             width: 100%;
             padding: 4px;
@@ -124,6 +133,8 @@ body {
         #new-set {
             grid-row: 1;
             grid-column: 1;
+            border-bottom-left-radius: 6px;
+            border-bottom-right-radius: 6px;
         }
 
         #edit-set {
@@ -131,15 +142,20 @@ body {
             grid-column: 1;
         }
 
+/* General center column --------------------------------------------------- */
+
 #center-column {
     display: flex;
     flex-direction: column;
     flex: 3;
     gap: 1%;
+    min-width: min(98%, 360px);
 }
 
+/* Word display ------------------------------------------------------------ */
+
     #word-display {
-        flex: 8;
+        flex: 10;
         display: flex;
         flex-direction: column;
         background-color: var(--box-background-color);
@@ -148,28 +164,31 @@ body {
         #word-display p {
             text-align: center;
             vertical-align: middle;
-            padding: 40px;
+            background-color: transparent;
+            margin-left: 5%;
+            margin-right: 5%;
         }
 
         #prompt-display {
-            height: 55%;
-            font-size: 48px;
-            margin-top: 10%;
+            font-size: 2.4em;
             box-sizing: border-box;
+            margin: 5%
         }
 
         #answer-display {
-            height: 45%;
-            font-size: 20px;
+            font-size: 1.2em;
+            margin-bottom: 5%
         }
+
+/* Input box --------------------------------------------------------------- */
 
     #input-box {
         flex: 2;
-        background-color: var(--box-background-color);
     }
 
         #response-form {
             background-color: var(--box-background-color);
+            border-radius: 6px;
             height: 100%;
         }
 
@@ -210,6 +229,8 @@ body {
             padding: 0;
         }
 
+/* Buttons ----------------------------------------------------------------- */
+
     #buttons {
         flex: 1;
         border: 2px solid var(--box-border-color);
@@ -221,15 +242,83 @@ body {
             background-color: var(--box-background-color);
             font-size: 16px;
             font-family: Verdana, Geneva, Tahoma, sans-serif;
+            border-radius: 6px;
         }
 
+/* Settings ---------------------------------------------------------------- */
+
     #settings {
-        flex: 10;
+        flex: 8;
     }
+
+        #select-terms-div {
+            width: 80%;
+            margin: 10%;
+            border: 2px solid var(--box-border-color);  
+            border-radius: 8px;
+        }
+
+            #select-terms-title {
+                font-size: 1em;
+                font-weight: normal;
+                font-size: 1.2em;
+                background-color: var(--title-background-color);
+                padding: 6px;
+                height: 35px;
+                border-top-left-radius: 6px;
+                border-top-right-radius: 6px;
+            }
+
+            #select-terms-form {
+                width: 100%;
+            }
+
+                #selected-terms-form th, td {
+                    border: 1px solid black;
+                    border-collapse: collapse;
+                }
+
+                #select-terms-form table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+
+                    .select-terms-header {
+                        font-weight: normal;
+                        text-align: left;
+                    }
+
+                        #select-header-terms, #select-header-defs {
+                            width: auto;
+                        }
+
+
+                        #select-header-checkboxes {
+                            width: 16px;
+                        }
+
+                    #select-terms-form table tr:nth-child(2n + 3) {
+                        background-color: var(--set-background-color-2);
+                    }
+
+                    #select-terms-form table tr:nth-child(even) {
+                        background-color: var(--set-background-color-1);
+                    }
+
+                    #select-terms-header-row {
+                        background-color: var(--title-background-color);
+                    }
+
+                    
+
+/* Explainer --------------------------------------------------------------- */ 
 
 #explainer {
     flex: 1;
+    max-width: 98%;
 }
+
+/* Set Builder ------------------------------------------------------------- */ 
 
 #set-builder {
     position: absolute;
@@ -238,6 +327,8 @@ body {
     max-width: 2500px;
     max-height: 3400px;
     margin: 1%;
+    margin-top: 0;
+    margin-bottom: 0;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
@@ -315,7 +406,7 @@ body {
             color: var(--text-color);
             background-color: var(--box-background-color);
             flex: 1;
-            font-size: 1.5em;
+            font-size: 16px;
             border: 2px solid var(--title-background-color);
             box-sizing: content-box;
             padding: 20px;

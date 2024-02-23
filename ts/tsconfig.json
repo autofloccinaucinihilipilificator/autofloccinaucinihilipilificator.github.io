@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "alwaysStrict": true,
+    "allowImportingTsExtensions": true,
+    "noEmit":  true
+  },
+  "files": [
+    "Prompter.ts",
+    "SetManager.ts",
+    "SettingsManager.ts",
+    "StudySet.ts",
+    "VocabPracticeTool.ts"
+  ]
+}
