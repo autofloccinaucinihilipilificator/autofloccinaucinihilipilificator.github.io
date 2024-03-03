@@ -1,3 +1,8 @@
 term 1; def 1
 term 2.1, term 2.2; def 2.1, def 2.2
 term 3; def 3.1, def 3.2, def 3.3
+
+term 0; def 0
+term 1; def 1
+term 2; def 2
+term 3; def 3
