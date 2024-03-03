@@ -31,8 +31,9 @@ const newSet = document.getElementById('new-set');
 const editSet = document.getElementById('new-set');
 
 const sets = [];
-let currentSet = [];
-let selectedTerms = [];
+let currentSet = {};
+let termSelection = [];
+let validTermChoices = [];
 let correctResponses = [];
 let termIndex = -1;
 
@@ -105,8 +106,8 @@ function loadSet(setIndex) {
 
     setListRows[setIndex].classList.add('selected');
 
-    selectedTerms = range(0, currentSet.data.length);
-    termIndex = nextPrompt(-1, selectedTerms);
+    validTermChoices = range(0, currentSet.data.length);
+    termIndex = nextPrompt(-1, validTermChoices);
     correctResponses = currentSet.data[termIndex].validDefs;
 
     answerDisplay.style.visibility = 'hidden';
@@ -176,7 +177,7 @@ responseForm.addEventListener('submit', (e) => {
         responseForm.classList.add('correct');
         termIndex = nextPrompt(
             termIndex,
-            selectedTerms
+            validTermChoices
         );
         correctResponses = currentSet.data[termIndex].validDefs;
         responseForm.reset();
