@@ -131,7 +131,9 @@ class StudySet {
         this.description = description;
         this.content = [];
         contentData.split('\n').forEach((item) => {
-            this.content.push(new StudyItem(item));
+            if (item !== "") {
+                this.content.push(new StudyItem(item));
+            }
         });
     }
 }

@@ -67,8 +67,8 @@ body {
     max-height: 3400px;
     flex: 1;
     display: grid;
-    grid-template-rows: 40px calc(100% - 104px) 64px;
-    min-width: 68px;
+    grid-template-rows: 40px calc(100% - 40px - 1 * 30px) 30px;
+    min-width: 96px;
     max-width: 98%;
     margin-top: 1%;
 }
@@ -123,26 +123,36 @@ body {
         #set-explorer-bottom-bar button {
             color: var(--text-color);
             background-color: var(--box-background-color);
-            font-size: 1em;
+            font-size: 0.75em;
             border: 2px solid var(--title-background-color);
             border-left: none;
             border-right: none;
             border-bottom: none;
-            padding: 12px;
+            padding: 6px;
             text-align: center;
             vertical-align: middle;
+            border-bottom-left-radius: 6px;
+            border-bottom-right-radius: 6px;
+            overflow: hidden;
         }
 
         #new-set {
             grid-row: 1;
             grid-column: 1;
-            border-bottom-left-radius: 6px;
-            border-bottom-right-radius: 6px;
         }
 
         #edit-set {
             grid-row: 2;
             grid-column: 1;
+        }
+
+        #load-sets {
+            grid-row: 3;
+        }
+
+        #download-sets {
+            grid-row: 4;
+            
         }
 
 /* General center column --------------------------------------------------- */
@@ -258,11 +268,14 @@ body {
 /* Settings ---------------------------------------------------------------- */
 
     #settings {
-        flex: 8;
+        height: 40%;
+        overflow-y: scroll;
     }
 
         #select-terms-div {
+            height: 80%;
             width: 80%;
+            max-height: 80%;
             margin: 10%;
             border: 2px solid var(--box-border-color);  
             border-radius: 8px;
@@ -301,7 +314,9 @@ body {
                 }
 
             #select-terms-table {
+                max-height: calc(80% - 35px);
                 width: 100%;
+                overflow-y: scroll;
             }
 
                 #selected-terms-table th, td {

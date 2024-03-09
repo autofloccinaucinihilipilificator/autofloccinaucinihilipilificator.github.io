@@ -7,7 +7,7 @@ A rudimentary website to help people (mostly myself) practice vocab. Hosted [her
 Now:
 
 - Validate user input, handle exceptions
-- Fix settings div changing height due to term selector
+- Implement downloading, loading sets
 
 Later:
 - Make things appear better at high zooms
