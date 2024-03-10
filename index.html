@@ -185,16 +185,22 @@
         <div id="set-builder">
             <h1 class="title" id="set-builder-title">New Set</h1>
             <form id="set-form">
-                <div id="set-title">
-                    <label for="set-title-input">Title</label>
+                <div id="set-title" class="set-form-div">
+                    <div class="set-builder-header">
+                        <label for="set-title-input">Title</label>
+                        <p id="set-title-error-box"></p>
+                    </div>
                     <input id="set-title-input" placeholder="Add title" autocomplete="off" />
                 </div>
-                <div id="set-description">
+                <div id="set-description" class="set-form-div">
                     <label for="set-description-input">Description</label>
                     <textarea id="set-description-input" placeholder="Add description (optional)"></textarea>
                 </div>
-                <div id="set-data">
-                    <label for="set-data-input">Term data</label>
+                <div id="set-data" class="set-form-div">
+                    <div class="set-builder-header">
+                        <label for="set-data-input">Term data</label>
+                        <p id="set-data-error-box"></p>
+                    </div>
                     <textarea id="set-data-input" placeholder="Add set data
 Example:
 Term 1; Definition 1

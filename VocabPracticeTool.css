@@ -14,6 +14,7 @@
     --set-background-color-2: rgb(105, 135, 220);
     --selected-set-background-color: rgb(200, 200, 140);
     --link-color: blue;
+    --error-color: red;
     border: none;
     outline: none;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -96,6 +97,7 @@ body {
             text-align: left;
             font-family: Verdana, Geneva, Tahoma, sans-serif;
             white-space: nowrap;
+            width: 100%;
         }
 
         #set-explorer table, tr, td {
@@ -411,12 +413,30 @@ body {
         overflow: auto;
     }
 
-        #set-form div {
+        .set-form-div {
             background-color: var(--box-background-color);
             border: 2px solid var(--box-border-color);
             border-radius: 8px;
             overflow-y: scroll;
         }
+
+        .set-builder-header {
+            display: flex;
+            align-items: center;
+            flex-direction: row;
+            background-color: var(--title-background-color);
+        }
+
+            .set-builder-header p {
+                white-space: nowrap;
+                background-color: var(--title-background-color);
+                overflow: clip;
+                height: 100%;
+                flex: auto;
+                text-align: right;
+                padding-right: 0.5em;
+                color: var(--error-color);
+            }
 
         #set-form label {
             display: inline-block;
@@ -425,6 +445,7 @@ body {
             overflow: hidden;
             padding: 4px;
             height: 28px;
+            flex: 1;
         }
 
         #set-form input {

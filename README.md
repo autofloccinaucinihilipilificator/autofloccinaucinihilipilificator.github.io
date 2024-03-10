@@ -6,7 +6,6 @@ A rudimentary website to help people (mostly myself) practice vocab. Hosted [her
 
 Now:
 
-- Validate user input, handle exceptions
 - Implement downloading, loading sets
 
 Later:

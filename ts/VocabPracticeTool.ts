@@ -42,6 +42,7 @@ class SetManager {
     setList: StudySet[];
     settings: SiteSettings;
     selectedSetIndex: number;
+    setBuilderMode: SetBuilderMode = SetBuilderMode.none;
 
     html = {
         setList: document.getElementById('set-list'),
@@ -49,11 +50,17 @@ class SetManager {
         newSet: document.getElementById('new-set'),
         setBuilder: document.getElementById('set-builder'),
         setForm: <HTMLFormElement>document.getElementById('set-form'),
+        setTitleDiv: document.getElementById('set-title'),
         setTitleInput: <HTMLInputElement>document.getElementById('set-title-input'),
+        setDescriptionDiv: document.getElementById('set-description'),
         setDescriptionInput: <HTMLTextAreaElement>document.getElementById('set-description-input'),
+        setDataDiv: document.getElementById('set-data'),
         setDataInput: <HTMLTextAreaElement>document.getElementById('set-data-input'),
         saveSet: document.getElementById('save-set'),
-        exitSetBuilder: document.getElementById('exit-set-builder')
+        exitSetBuilder: document.getElementById('exit-set-builder'),
+        setTitleErrorBox: document.getElementById('set-title-error-box'),
+        setDescriptionErrorBox: document.getElementById('set-description-error-box'),
+        setDataErrorBox: document.getElementById('set-data-error-box'),
     };
 
     constructor(setList: StudySet[], settings: SiteSettings) {
@@ -72,24 +79,76 @@ class SetManager {
         this.html.exitSetBuilder.addEventListener('click', (e) => {
             this.exitSetBuilder();
         });
+
+        this.html.saveSet.addEventListener('click', (e) => {
+            this.processSaveSet();
+        });
     }
 
     newSet(): void {
         this.html.setBuilder.style.visibility = 'visible';
-        this.html.saveSet.addEventListener('click', (e) => {
-            this.saveSet();
-        }, { once: true });
     }
 
-    saveSet() {
-        this.setList.push(new StudySet(
-            this.html.setTitleInput.value,
-            this.html.setDescriptionInput.value,
-            this.html.setDataInput.value
-        ));
-        this.updateSetList();
-        this.html.setBuilder.style.visibility = 'hidden';
-        this.html.setForm.reset();
+    processSaveSet() {
+        let validTitle: boolean = true;
+        let validData: boolean = true;
+
+        if (this.html.setTitleInput.value === "") {
+            this.html.setTitleErrorBox.innerText = "Can't make a set without a title!";
+            this.html.setTitleDiv.style.borderColor = 'var(--error-color)';
+            validTitle = false;
+        }
+
+        if (this.html.setDataInput.value === "") {
+            this.html.setDataErrorBox.innerText = "Can't make a set without any data!";
+            this.html.setDataDiv.style.borderColor = 'var(--error-color)';
+            validData = false;
+        }
+        else {
+            const setDataLines: string[] = this.html.setDataInput.value.split('\n');
+            let invalidStudyItems: number[] = [];
+            for (let i = 0; i < setDataLines.length; i++) {
+                if (setDataLines[i].split(";").length !== 2) {
+                    invalidStudyItems.push(i + 1);
+                }
+            }
+            if (invalidStudyItems.length === 1) {
+                this.html.setDataErrorBox.innerText = `Could not parse term ${invalidStudyItems[0]}!`;
+                this.html.setDataDiv.style.borderColor = 'var(--error-color)';
+                validData = false;
+            }
+            else if (invalidStudyItems.length > 1) {
+                this.html.setDataErrorBox.innerText = `Could not parse terms ${invalidStudyItems.toString().replace(',', ', ')
+                    }!`;
+                this.html.setDataDiv.style.borderColor = 'var(--error-color)';
+                validData = false;
+            }
+        }
+        if (validTitle && validData) {
+            this.setList.push(new StudySet(
+                this.html.setTitleInput.value,
+                this.html.setDescriptionInput.value,
+                this.html.setDataInput.value
+            ));
+
+            this.updateSetList();
+            this.html.setBuilder.style.visibility = 'hidden';
+            this.html.setForm.reset();
+        }
+        else {
+            if (!validTitle) {
+                this.html.setTitleInput.addEventListener('input', (e) => {
+                    this.html.setTitleDiv.style.borderColor = 'var(--box-border-color)';
+                    this.html.setTitleErrorBox.innerText = "";
+                }, { once: true } );
+            }
+            if (!validData) {
+                this.html.setDataInput.addEventListener('input', (e) => {
+                    this.html.setDataDiv.style.borderColor = 'var(--box-border-color)';
+                    this.html.setDataErrorBox.innerText = "";
+                }, { once: true } );
+            }
+        }
     }
 
     deleteSet(setFolderPath: string): void {
@@ -119,6 +178,12 @@ class SetManager {
         this.html.setBuilder.style.visibility = 'hidden';
         this.html.setForm.reset();
     }
+}
+
+enum SetBuilderMode {
+    new,
+    edit,
+    none
 }
 
 class StudySet {
@@ -242,7 +307,6 @@ class Prompter {
 
                     const index = tempSelectedTermArray.indexOf(this.currentTermId);
                     tempSelectedTermArray = tempSelectedTermArray.filter(item => item !== this.currentTermId);
-                    console.log('tempSelectedTermArray: ' + tempSelectedTermArray);
 
                     this.currentTermId = this.randElement(tempSelectedTermArray);
                 }
