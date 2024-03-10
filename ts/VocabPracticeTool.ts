@@ -115,7 +115,7 @@ class SetManager {
             const setDataLines: string[] = this.html.setDataInput.value.split('\n');
             let invalidStudyItems: number[] = [];
             for (let i = 0; i < setDataLines.length; i++) {
-                if (setDataLines[i].split(";").length !== 2) {
+                if (setDataLines[i].split(";").length !== 2 && setDataLines[i] !== "") {
                     invalidStudyItems.push(i + 1);
                 }
             }

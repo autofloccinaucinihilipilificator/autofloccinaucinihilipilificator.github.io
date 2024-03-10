@@ -15,6 +15,8 @@
     --selected-set-background-color: rgb(200, 200, 140);
     --link-color: blue;
     --error-color: red;
+    --scrollbar-background-color: rgb(64, 80, 112);
+    --scrollbar-bar-color: rgb(35, 50, 100);
     border: none;
     outline: none;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -22,6 +24,7 @@
     padding: 0;
     box-sizing: border-box;
     color: var(--text-color);
+    scrollbar-color: var(--scrollbar-bar-color) var(--scrollbar-background-color);
 }
 
 body {
@@ -269,15 +272,19 @@ body {
 
 /* Settings ---------------------------------------------------------------- */
 
-    #settings {
-        height: 40%;
+#settings {
+    height: 40%;
+    overflow: hidden;
+}
+
+    #settings-content {
+        height: calc(100% - 40px);
+        margin-bottom: 20%;
         overflow-y: scroll;
     }
 
         #select-terms-div {
-            height: 80%;
             width: 80%;
-            max-height: 80%;
             margin: 10%;
             border: 2px solid var(--box-border-color);  
             border-radius: 8px;
@@ -417,7 +424,7 @@ body {
             background-color: var(--box-background-color);
             border: 2px solid var(--box-border-color);
             border-radius: 8px;
-            overflow-y: scroll;
+            overflow: hidden;
         }
 
         .set-builder-header {
@@ -456,9 +463,9 @@ body {
 
         #set-form textarea {
             resize: none;
-            overflow: hidden;
+            overflow-y: scroll;
             background-color: transparent;
-            height: 100%;
+            height: calc(100% - 28px);
             width: 100%;
             padding-left: 4px;
         }
