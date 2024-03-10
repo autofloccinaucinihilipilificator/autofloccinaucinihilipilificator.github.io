@@ -12,6 +12,13 @@
         });
         this.setManager = new SetManager([], this.settingsManager.settings);
         this.prompter = new Prompter(this.settingsManager.settings);
+
+        window.addEventListener('beforeunload', (e) => {
+            if (this.setManager.setList.length !== 0) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
     }
 
     loadSet(index: number): void {
