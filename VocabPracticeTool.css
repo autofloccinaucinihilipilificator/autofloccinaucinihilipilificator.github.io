@@ -390,6 +390,19 @@ body {
         color: var(--link-color);
     }
 
+    #explainer h2 {
+        font-weight: normal;
+        font-size: 1.2em;
+        padding: 6px;
+    }
+
+    #explainer ul {
+        padding: 6px;
+        padding-top: 0;
+        padding-left: 24px;
+        list-style-type: "- ";
+    }
+
 /* Set Builder ------------------------------------------------------------- */ 
 
 #set-builder {
@@ -451,6 +464,7 @@ body {
             background-color: var(--title-background-color);
             overflow: hidden;
             padding: 4px;
+            padding-bottom: 0px;
             height: 28px;
             flex: 1;
         }
@@ -467,7 +481,7 @@ body {
             background-color: transparent;
             height: calc(100% - 28px);
             width: 100%;
-            padding-left: 4px;
+            padding: 4px;
         }
 
         #set-title {
@@ -480,6 +494,11 @@ body {
             flex: 3;
             min-height: 56px;
         }
+
+            /* I have no idea why this is necessary */
+            #set-description-input {
+                margin-top: -4px;
+            }
 
         #set-data {
             flex: 6;
