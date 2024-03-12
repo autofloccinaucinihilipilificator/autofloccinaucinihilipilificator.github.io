@@ -273,7 +273,8 @@ body {
 /* Settings ---------------------------------------------------------------- */
 
 #settings {
-    height: 40%;
+    flex: 7;
+    max-height: 35%;
     overflow: hidden;
 }
 
