@@ -36,8 +36,10 @@ body {
 
 #container {
     box-sizing: border-box;
-    height: 100%;
-    width: 98%;
+    margin-top: 1vh;
+    margin-leftL 1vh;
+    height: 98vh;
+    width: 98vw;
     max-width: 2500px;
     max-height: 3400px;
     color: var(--text-color);
@@ -68,13 +70,11 @@ body {
 
 #set-explorer {
     height: 98vh;
-    max-height: 3400px;
     flex: 1;
     display: grid;
     grid-template-rows: 40px calc(100% - 40px - 1 * 30px) 30px;
     min-width: 96px;
     max-width: 98%;
-    margin-top: 1%;
 }
 
     #set-explorer-title {
@@ -168,14 +168,16 @@ body {
     flex: 3;
     gap: 1%;
     min-width: min(98%, 360px);
-    margin-top: 1%;
     max-width: 98%;
 }
 
 /* Word display ------------------------------------------------------------ */
 
     #word-display {
-        flex: 10;
+        height: 48vh;
+        min-height: 120px;
+        max-height: 50%;
+        overflow: hidden;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -195,20 +197,22 @@ body {
         #prompt-display {
             font-size: 2.4em;
             box-sizing: border-box;
-            height: 45%;
+            height: 40%;
             margin-top: 5%;
         }
 
         #answer-display {
             font-size: 1.2em;
-            height: 45%;
+            height: 40%;
             margin-bottom: 5%;
         }
 
 /* Input box --------------------------------------------------------------- */
 
     #input-div {
-        flex: 2;
+        height: 9.6vh;
+        max-height: 10%;
+        min-height: 36px;
     }
 
         #input-form {
@@ -257,7 +261,9 @@ body {
 /* Buttons ----------------------------------------------------------------- */
 
     #buttons {
-        flex: 1;
+        height: 4.8vh;
+        max-height: 5%;
+        min-height: 28px;
         border: 2px solid var(--box-border-color);
         border-radius: 8px;
         display: grid;
@@ -273,8 +279,9 @@ body {
 /* Settings ---------------------------------------------------------------- */
 
 #settings {
-    flex: 7;
+    height: 33.6vh;
     max-height: 35%;
+    min-height: 120px;
     overflow: hidden;
 }
 
@@ -380,7 +387,6 @@ body {
 #explainer {
     flex: 1;
     max-width: 98%;
-    margin-top: 1%;
 }
 
     #explainer p {
@@ -408,11 +414,10 @@ body {
 
 #set-builder {
     position: absolute;
-    height: 98%;
-    width: 98%;
+    height: 98vh;
+    width: 98vw;
     max-width: 2500px;
     max-height: 3400px;
-    margin-top: 1%;
     border-radius: 8px;
     display: flex;
     flex-direction: column;

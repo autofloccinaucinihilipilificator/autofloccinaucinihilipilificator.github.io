@@ -240,6 +240,7 @@ class Prompter {
         selectTermsForm: <HTMLFormElement>document.getElementById('select-terms-form'),
         toggleTermSelectionView: <HTMLButtonElement>document.getElementById('toggle-term-selection-view'),
         selectTermsHeader: document.getElementById('select-terms-header'),
+        showAnswer: document.getElementById('show-answer'),
     }
 
     constructor(settings: SiteSettings) {
@@ -256,6 +257,9 @@ class Prompter {
 
         this.html.toggleTermSelectionView.addEventListener('click', (e) => {
             this.toggleTermSelectionView();
+        });
+        this.html.showAnswer.addEventListener('click', (e) => {
+            this.showAnswer();
         });
     }
 
@@ -357,7 +361,7 @@ class Prompter {
     }
 
     showAnswer(): void {
-
+        this.html.answerDisplay.style.visibility = 'visible';
     }
 
     randInt(min: number, max: number): number {

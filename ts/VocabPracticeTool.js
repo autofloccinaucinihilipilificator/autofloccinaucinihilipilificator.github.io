@@ -188,6 +188,7 @@ class Prompter {
             selectTermsForm: document.getElementById('select-terms-form'),
             toggleTermSelectionView: document.getElementById('toggle-term-selection-view'),
             selectTermsHeader: document.getElementById('select-terms-header'),
+            showAnswer: document.getElementById('show-answer'),
         };
         this.settings = settings;
         this.html.inputForm.addEventListener('submit', (e) => {
@@ -199,6 +200,9 @@ class Prompter {
         });
         this.html.toggleTermSelectionView.addEventListener('click', (e) => {
             this.toggleTermSelectionView();
+        });
+        this.html.showAnswer.addEventListener('click', (e) => {
+            this.showAnswer();
         });
     }
     loadSet(set) {
@@ -278,6 +282,7 @@ class Prompter {
         return responses.every(isCorrect);
     }
     showAnswer() {
+        this.html.answerDisplay.style.visibility = 'visible';
     }
     randInt(min, max) {
         return Math.floor(Math.random() * (max - min) + min);
