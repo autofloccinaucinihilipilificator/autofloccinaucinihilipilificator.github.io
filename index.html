@@ -159,20 +159,49 @@
             <div id="buttons">
                 <button type="button" id="show-answer">Show Answer</button>
             </div>
-            <div id="settings" class="box">
+            <div id="prompt-settings" class="box">
                 <h1 class="title" id="settings-title">Settings</h1>
-                <div id="settings-content">
-                    <div id="select-terms-div">
-                        <div id="select-terms-header">
-                            <h1 class="title" id="select-terms-title">Select Terms</h1>
-                            <div id="toggle-selection-view-div">
-                                <button type="button" id="toggle-term-selection-view">Hide term selection</button>
-                            </div>
-                        </div>
-                        <form id="select-terms-form">
-                            <table id="select-terms-table">
+                <div id="prompt-settings-interior">
+                    <div id="prompt-settings-content">
+                        <form id="prompt-settings-form">
+                            <table>
+                                <tr>
+                                    <td><label for="ignore-case">Ignore letter case: </label></td>
+                                    <td><input id="ignore-case" checked="checked" type="checkbox" /></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="ignore-parentheses">Ignore text in parentheses: </label></td>
+                                    <td><input id="ignore-parentheses" checked="checked" type="checkbox" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Ignore whitespace: </td>
+                                </tr>
+                                <tr>
+                                    <td><label class="radio" for="ignore-whitespace-none">None</label></td>
+                                    <td><input type="radio" id="ignore-whitespace-none" name="ignore-whitespace" /></td>
+                                </tr>
+                                <tr>
+                                    <td><label class="radio" for="ignore-whitespace-ends">Start and end only</label></td>
+                                    <td><input type="radio" id="ignore-whitespace-ends" name="ignore-whitespace" checked="checked"/></td>
+                                </tr>
+                                <tr>
+                                    <td><label class="radio" for="ignore-whitespace-all">All</label></td>
+                                    <td><input type="radio" id="ignore-whitespace-all" name="ignore-whitespace" /></td>
+                                </tr>
                             </table>
                         </form>
+                        <div id="select-terms-div">
+                            <div id="select-terms-header">
+                                <h1 class="title" id="select-terms-title">Select Terms</h1>
+                                <div id="toggle-selection-view-div">
+                                    <button type="button" id="toggle-term-selection-view">Hide term selection</button>
+                                </div>
+                            </div>
+                            <form id="select-terms-form">
+                                <table id="select-terms-table">
+                                </table>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

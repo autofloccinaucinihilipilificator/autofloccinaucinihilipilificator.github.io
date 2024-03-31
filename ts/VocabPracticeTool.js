@@ -4,11 +4,11 @@ class Site {
         this.html = {
             newSet: document.getElementById('new-set'),
         };
-        this.settingsManager = new SettingsManager({
+        this.siteSettingsManager = new SiteSettingsManager({
             animations: AnimationSetting.on
         });
-        this.setManager = new SetManager([], this.settingsManager.settings);
-        this.prompter = new Prompter(this.settingsManager.settings);
+        this.setManager = new SetManager([], this.siteSettingsManager.settings);
+        this.prompter = new Prompter(this.siteSettingsManager.settings);
         window.addEventListener('beforeunload', (e) => {
             if (this.setManager.setList.length !== 0) {
                 e.preventDefault();
@@ -20,7 +20,7 @@ class Site {
         this.prompter.loadSet(this.setManager.selectSet(index));
     }
 }
-class SettingsManager {
+class SiteSettingsManager {
     constructor(settings) {
         this.settings = settings;
     }
@@ -57,7 +57,7 @@ class SetManager {
             setDataErrorBox: document.getElementById('set-data-error-box'),
         };
         this.setList = setList;
-        this.settings = settings;
+        this.siteSettings = settings;
         this.selectedSetIndex = -1;
         this.html.newSet.addEventListener('click', (e) => {
             this.newSet();
@@ -175,7 +175,8 @@ class StudyItem {
     }
 }
 class Prompter {
-    constructor(settings) {
+    constructor(siteSettings) {
+        this.promptSettings = new PromptSettings(true, true, IgnoreWhitespace.ends);
         this.currentTermId = -1;
         this.termSelectionDisplayed = true;
         this.html = {
@@ -189,8 +190,9 @@ class Prompter {
             toggleTermSelectionView: document.getElementById('toggle-term-selection-view'),
             selectTermsHeader: document.getElementById('select-terms-header'),
             showAnswer: document.getElementById('show-answer'),
+            promptSettingsForm: document.getElementById('prompt-settings-form'),
         };
-        this.settings = settings;
+        this.siteSettings = siteSettings;
         this.html.inputForm.addEventListener('submit', (e) => {
             e.preventDefault();
             this.processResponse();
@@ -203,6 +205,9 @@ class Prompter {
         });
         this.html.showAnswer.addEventListener('click', (e) => {
             this.showAnswer();
+        });
+        this.html.promptSettingsForm.addEventListener('change', (e) => {
+            this.updatePromptSettings();
         });
     }
     loadSet(set) {
@@ -277,9 +282,101 @@ class Prompter {
         }
     }
     checkIfCorrect(response) {
-        const isCorrect = (response) => this.currentStudyItem.validDefs.includes(response);
-        const responses = response.split(', ');
-        return responses.every(isCorrect);
+        let responses = response.split(', ');
+        /*return responses.every(isCorrect);*/
+        let newValidDefArray = this.currentStudyItem.validDefs.slice();
+        let newResponseArray = responses.slice();
+        let tempArray = [];
+        if (this.promptSettings.ignoreCase) {
+            newValidDefArray.forEach((def) => {
+                tempArray.push(def.toLowerCase());
+            });
+            newValidDefArray = tempArray.slice();
+            tempArray = [];
+            newResponseArray.forEach((response) => {
+                tempArray.push(response.toLowerCase());
+            });
+            newResponseArray = tempArray.slice();
+            tempArray = [];
+        }
+        if (this.promptSettings.ignoreParentheses) {
+            // Count num of open parentheses not matched with a close parenthesis
+            // Only include char if count = 0
+            newValidDefArray.forEach((def) => {
+                let unmatchedOpenCount = 0;
+                let newDef = "";
+                for (let i = 0; i < def.length; i++) {
+                    if (def[i] === "(") {
+                        unmatchedOpenCount++;
+                    }
+                    else if (def[i] === ")") {
+                        if (unmatchedOpenCount === 0) {
+                            newDef += ")";
+                        }
+                        else {
+                            unmatchedOpenCount--;
+                        }
+                    }
+                    else {
+                        if (unmatchedOpenCount === 0) {
+                            newDef += def[i];
+                        }
+                    }
+                }
+                tempArray.push(newDef);
+            });
+            newValidDefArray = tempArray.slice();
+            tempArray = [];
+            newResponseArray.forEach((resp) => {
+                let unmatchedOpenCount = 0;
+                let newResp = "";
+                for (let i = 0; i < resp.length; i++) {
+                    if (resp[i] === "(") {
+                        unmatchedOpenCount++;
+                    }
+                    else if (resp[i] === ")") {
+                        if (unmatchedOpenCount === 0) {
+                            newResp += ")";
+                        }
+                        else {
+                            unmatchedOpenCount--;
+                        }
+                    }
+                    else {
+                        newResp += resp[i];
+                    }
+                }
+                tempArray.push(newResp);
+            });
+            newResponseArray = tempArray.slice();
+            tempArray = [];
+        }
+        if (this.promptSettings.ignoreWhitespace == IgnoreWhitespace.ends) {
+            newValidDefArray.forEach((def) => {
+                tempArray.push(def.trim());
+            });
+            newValidDefArray = tempArray.slice();
+            tempArray = [];
+            newResponseArray.forEach((resp) => {
+                tempArray.push(resp.trim());
+            });
+            newResponseArray = tempArray.slice();
+            tempArray = [];
+        }
+        else if (this.promptSettings.ignoreWhitespace == IgnoreWhitespace.all) {
+            newValidDefArray.forEach((def) => {
+                tempArray.push(def.replaceAll(new RegExp(/\s/, 'g'), ''));
+            });
+            newValidDefArray = tempArray.slice();
+            tempArray = [];
+            newResponseArray.forEach((resp) => {
+                tempArray.push(resp.replaceAll(new RegExp(/\s/, 'g'), ''));
+            });
+            newResponseArray = tempArray.slice();
+            tempArray = [];
+        }
+        const isCorrect = (response) => newValidDefArray.includes(response);
+        return newResponseArray.every(isCorrect);
     }
     showAnswer() {
         this.html.answerDisplay.style.visibility = 'visible';
@@ -321,5 +418,34 @@ class Prompter {
             this.termSelectionDisplayed = true;
         }
     }
+    updatePromptSettings() {
+        this.promptSettings.ignoreCase = this.html.promptSettingsForm[0].checked;
+        this.promptSettings.ignoreParentheses = this.html.promptSettingsForm[1].checked;
+        for (let i = IgnoreWhitespace.none; i <= IgnoreWhitespace.all; i++) {
+            if (this.html.promptSettingsForm[i].checked) {
+                this.promptSettings.ignoreWhitespace = i;
+            }
+        }
+    }
 }
+class PromptSettings {
+    constructor(ignoreCase, requireParentheses, ignoreWhitespace) {
+        this.ignoreCase = ignoreCase;
+        this.ignoreParentheses = requireParentheses;
+        this.ignoreWhitespace = ignoreWhitespace;
+    }
+}
+var PromptCategory;
+(function (PromptCategory) {
+    PromptCategory[PromptCategory["terms"] = 0] = "terms";
+    PromptCategory[PromptCategory["defs"] = 1] = "defs";
+    PromptCategory[PromptCategory["both"] = 2] = "both";
+})(PromptCategory || (PromptCategory = {}));
+// Nominals based on position of inputs in form
+var IgnoreWhitespace;
+(function (IgnoreWhitespace) {
+    IgnoreWhitespace[IgnoreWhitespace["none"] = 2] = "none";
+    IgnoreWhitespace[IgnoreWhitespace["ends"] = 3] = "ends";
+    IgnoreWhitespace[IgnoreWhitespace["all"] = 4] = "all";
+})(IgnoreWhitespace || (IgnoreWhitespace = {}));
 const site = new Site();

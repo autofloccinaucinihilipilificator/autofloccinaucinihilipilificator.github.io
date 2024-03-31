@@ -1,17 +1,17 @@
 ﻿class Site {
     setManager: SetManager;
     prompter: Prompter;
-    settingsManager: SettingsManager;
+    siteSettingsManager: SiteSettingsManager;
     html = {
         newSet: document.getElementById('new-set'),
-    }
+    };
 
     constructor() {
-        this.settingsManager = new SettingsManager({
+        this.siteSettingsManager = new SiteSettingsManager({
             animations: AnimationSetting.on
         });
-        this.setManager = new SetManager([], this.settingsManager.settings);
-        this.prompter = new Prompter(this.settingsManager.settings);
+        this.setManager = new SetManager([], this.siteSettingsManager.settings);
+        this.prompter = new Prompter(this.siteSettingsManager.settings);
 
         window.addEventListener('beforeunload', (e) => {
             if (this.setManager.setList.length !== 0) {
@@ -26,7 +26,7 @@
     }
 }
 
-class SettingsManager {
+class SiteSettingsManager {
     settings: SiteSettings
     constructor(settings: SiteSettings) {
         this.settings = settings;
@@ -47,7 +47,7 @@ enum AnimationSetting {
 
 class SetManager {
     setList: StudySet[];
-    settings: SiteSettings;
+    siteSettings: SiteSettings;
     selectedSetIndex: number;
     setBuilderMode: SetBuilderMode = SetBuilderMode.none;
 
@@ -72,7 +72,7 @@ class SetManager {
 
     constructor(setList: StudySet[], settings: SiteSettings) {
         this.setList = setList;
-        this.settings = settings;
+        this.siteSettings = settings;
         this.selectedSetIndex = -1;
 
         this.html.newSet.addEventListener('click', (e) => {
@@ -218,15 +218,14 @@ class StudyItem {
         this.validTerms = data.split('; ')[0].split(', ');
         this.validDefs = data.split('; ')[1].split(', ');
     }
-
-
 }
 
 class Prompter {
     currentSet: StudySet;
     selectedTermIds: number[];
     currentStudyItem: StudyItem;
-    settings: SiteSettings;
+    promptSettings: PromptSettings = new PromptSettings(true, true, IgnoreWhitespace.ends);
+    siteSettings: SiteSettings;
     currentTermId: number = -1;
     termSelectionDisplayed: boolean = true;
 
@@ -241,10 +240,11 @@ class Prompter {
         toggleTermSelectionView: <HTMLButtonElement>document.getElementById('toggle-term-selection-view'),
         selectTermsHeader: document.getElementById('select-terms-header'),
         showAnswer: document.getElementById('show-answer'),
+        promptSettingsForm: <HTMLFormElement>document.getElementById('prompt-settings-form'),
     }
 
-    constructor(settings: SiteSettings) {
-        this.settings = settings;
+    constructor(siteSettings: SiteSettings) {
+        this.siteSettings = siteSettings;
 
         this.html.inputForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -258,8 +258,13 @@ class Prompter {
         this.html.toggleTermSelectionView.addEventListener('click', (e) => {
             this.toggleTermSelectionView();
         });
+
         this.html.showAnswer.addEventListener('click', (e) => {
             this.showAnswer();
+        });
+
+        this.html.promptSettingsForm.addEventListener('change', (e) => {
+            this.updatePromptSettings();
         });
     }
 
@@ -355,9 +360,114 @@ class Prompter {
     }
 
     checkIfCorrect(response: string): boolean {
-        const isCorrect = (response) => this.currentStudyItem.validDefs.includes(response);
-        const responses = response.split(', ');
-        return responses.every(isCorrect);
+        
+        let responses: string[] = response.split(', ');
+        /*return responses.every(isCorrect);*/
+
+        let newValidDefArray: string[] = this.currentStudyItem.validDefs.slice();
+        let newResponseArray: string[] = responses.slice();
+        let tempArray: string[] = [];
+        
+        if (this.promptSettings.ignoreCase) {
+
+            newValidDefArray.forEach((def) => {
+                tempArray.push(def.toLowerCase());
+            })
+            newValidDefArray = tempArray.slice();
+            tempArray = [];
+
+            newResponseArray.forEach((response) => {
+                tempArray.push(response.toLowerCase());
+            }); 
+            newResponseArray = tempArray.slice();
+            tempArray = [];
+        }
+
+        if (this.promptSettings.ignoreParentheses) {
+            // Count num of open parentheses not matched with a close parenthesis
+            // Only include char if count = 0
+
+            newValidDefArray.forEach((def) => {
+                let unmatchedOpenCount = 0;
+                let newDef = "";
+                for (let i = 0; i < def.length; i++) {
+                    if (def[i] === "(") {
+                        unmatchedOpenCount++;
+                    }
+                    else if (def[i] === ")") {
+                        if (unmatchedOpenCount === 0) {
+                            newDef += ")";
+                        }
+                        else {
+                            unmatchedOpenCount--;
+                        }
+                    }
+                    else {
+                        if (unmatchedOpenCount === 0) {
+                            newDef += def[i];
+                        }
+                    }
+                }
+                tempArray.push(newDef);
+            });
+            newValidDefArray = tempArray.slice();
+            tempArray = [];
+
+            newResponseArray.forEach((resp) => {
+                let unmatchedOpenCount = 0;
+                let newResp = "";
+                for (let i = 0; i < resp.length; i++) {
+                    if (resp[i] === "(") {
+                        unmatchedOpenCount++;
+                    }
+                    else if (resp[i] === ")") {
+                        if (unmatchedOpenCount === 0) {
+                            newResp += ")";
+                        }
+                        else {
+                            unmatchedOpenCount--;
+                        }
+                    }
+                    else {
+                        newResp += resp[i];
+                    }
+                }
+                tempArray.push(newResp);
+            });
+            newResponseArray = tempArray.slice();
+            tempArray = [];
+        }
+
+        if (this.promptSettings.ignoreWhitespace == IgnoreWhitespace.ends) {
+            newValidDefArray.forEach((def) => {
+                tempArray.push(def.trim());
+            });
+            newValidDefArray = tempArray.slice();
+            tempArray = [];
+
+            newResponseArray.forEach((resp) => {
+                tempArray.push(resp.trim());
+            });
+            newResponseArray = tempArray.slice();
+            tempArray = [];
+        }
+        else if (this.promptSettings.ignoreWhitespace == IgnoreWhitespace.all) {
+            newValidDefArray.forEach((def) => {
+                tempArray.push(def.replaceAll(new RegExp(/\s/, 'g'), ''));
+            });
+            newValidDefArray = tempArray.slice();
+            tempArray = [];
+
+            newResponseArray.forEach((resp) => {
+                tempArray.push(resp.replaceAll(new RegExp(/\s/, 'g'), ''));
+            });
+            newResponseArray = tempArray.slice();
+            tempArray = [];
+        }
+
+        const isCorrect = (response) => newValidDefArray.includes(response);
+
+        return newResponseArray.every(isCorrect);
     }
 
     showAnswer(): void {
@@ -405,6 +515,40 @@ class Prompter {
             this.termSelectionDisplayed = true;
         }
     }
+
+    updatePromptSettings() {
+        this.promptSettings.ignoreCase = (<HTMLInputElement>this.html.promptSettingsForm[0]).checked;
+        this.promptSettings.ignoreParentheses = (<HTMLInputElement>this.html.promptSettingsForm[1]).checked;
+        for (let i: number = IgnoreWhitespace.none; i <= IgnoreWhitespace.all ; i++) {
+            if ((<HTMLInputElement>this.html.promptSettingsForm[i]).checked) {
+                this.promptSettings.ignoreWhitespace = i;
+            }
+        }
+    }
+}
+
+class PromptSettings {
+    ignoreCase: boolean;
+    ignoreParentheses: boolean;
+    ignoreWhitespace: IgnoreWhitespace;
+    constructor(ignoreCase, requireParentheses, ignoreWhitespace) {
+        this.ignoreCase = ignoreCase;
+        this.ignoreParentheses = requireParentheses;
+        this.ignoreWhitespace = ignoreWhitespace;
+    }
+}
+
+enum PromptCategory {
+    terms,
+    defs,
+    both
+}
+
+// Nominals based on position of inputs in form
+enum IgnoreWhitespace {
+    none = 2,
+    ends,
+    all,
 }
 
 const site = new Site();
