@@ -8,6 +8,7 @@
             <h1 class="title" id="set-explorer-title">Sets</h1>
             <div>
                 <table id="set-list">
+                    <!-- TODO: Generate automatically -->
                     <tr><td><button type="button"></button></td></tr>
                     <tr><td><button type="button"></button></td></tr>
                     <tr><td><button type="button"></button></td></tr>
@@ -166,6 +167,21 @@
                         <form id="prompt-settings-form">
                             <table>
                                 <tr>
+                                    <td>Prompt category: </td>
+                                </tr>
+                                <tr>
+                                    <td><label class="radio" for="prompt-category-terms">Prompt terms: </label></td>
+                                    <td><input type="radio" id="prompt-category-terms" name="prompt-category" checked="checked"/></td>
+                                </tr>
+                                <tr>
+                                    <td><label class="radio" for="prompt-category-defs">Prompt definitions: </label></td>
+                                    <td><input type="radio" id="prompt-category-defs" name="prompt-category" /></td>
+                                </tr>
+                                <tr>
+                                    <td><label class="radio" for="prompt-category-both">Prompt either: </label></td>
+                                    <td><input type="radio" id="prompt-category-both" name="prompt-category" /></td>
+                                </tr>
+                                <tr>
                                     <td><label for="ignore-case">Ignore letter case: </label></td>
                                     <td><input id="ignore-case" checked="checked" type="checkbox" /></td>
                                 </tr>
@@ -182,7 +198,7 @@
                                 </tr>
                                 <tr>
                                     <td><label class="radio" for="ignore-whitespace-ends">Start and end only</label></td>
-                                    <td><input type="radio" id="ignore-whitespace-ends" name="ignore-whitespace" checked="checked"/></td>
+                                    <td><input type="radio" id="ignore-whitespace-ends" name="ignore-whitespace" checked="checked" /></td>
                                 </tr>
                                 <tr>
                                     <td><label class="radio" for="ignore-whitespace-all">All</label></td>
@@ -209,10 +225,7 @@
         <div id="explainer" class="box">
             <h1 class="title" id="explainer-title">About</h1>
             <p>A hopefully simple, hopefully easy to use website to help people (really just myself) study things.</p>
-            <p><a href="https://github.com/autofloccinaucinihilipilificator/autofloccinaucinihilipilificator.github.io">Github</a></p>
-            <h2><u>Changelog</u></h2>
-            <ul>
-            </ul>
+            <p><a target="_blank" href="https://github.com/autofloccinaucinihilipilificator/autofloccinaucinihilipilificator.github.io">Github</a></p>
         </div>
         <div id="set-builder">
             <h1 class="title" id="set-builder-title">New Set</h1>

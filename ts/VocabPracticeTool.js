@@ -176,7 +176,7 @@ class StudyItem {
 }
 class Prompter {
     constructor(siteSettings) {
-        this.promptSettings = new PromptSettings(true, true, IgnoreWhitespace.ends);
+        this.promptSettings = new PromptSettings(PromptCategory.terms, true, true, IgnoreWhitespace.ends);
         this.currentTermId = -1;
         this.termSelectionDisplayed = true;
         this.html = {
@@ -262,8 +262,23 @@ class Prompter {
             }
         }
         this.currentStudyItem = this.currentSet.content[this.currentTermId];
-        this.html.promptDisplay.innerHTML = ("" + this.currentStudyItem.validTerms).replaceAll(',', ', ');
-        this.html.answerDisplay.innerHTML = ("" + this.currentStudyItem.validDefs).replaceAll(',', ', ');
+        if (this.promptSettings.promptCategory === PromptCategory.terms) {
+            this.promptingTerms = true;
+        }
+        else if (this.promptSettings.promptCategory === PromptCategory.defs) {
+            this.promptingTerms = false;
+        }
+        else {
+            this.promptingTerms = Math.random() < 0.5;
+        }
+        if (this.promptingTerms) {
+            this.html.promptDisplay.innerHTML = ("" + this.currentStudyItem.validTerms).replaceAll(',', ', ');
+            this.html.answerDisplay.innerHTML = ("" + this.currentStudyItem.validDefs).replaceAll(',', ', ');
+        }
+        else {
+            this.html.promptDisplay.innerHTML = ("" + this.currentStudyItem.validDefs).replaceAll(',', ', ');
+            this.html.answerDisplay.innerHTML = ("" + this.currentStudyItem.validTerms).replaceAll(',', ', ');
+        }
     }
     processResponse() {
         this.html.inputForm.classList.remove('correct');
@@ -283,100 +298,91 @@ class Prompter {
     }
     checkIfCorrect(response) {
         let responses = response.split(', ');
-        /*return responses.every(isCorrect);*/
-        let newValidDefArray = this.currentStudyItem.validDefs.slice();
-        let newResponseArray = responses.slice();
+        let newValidRespArray;
+        if (this.promptingTerms) {
+            newValidRespArray = this.currentStudyItem.validDefs.slice();
+        }
+        else {
+            newValidRespArray = this.currentStudyItem.validTerms.slice();
+        }
+        let newUserRespArray = responses.slice();
         let tempArray = [];
         if (this.promptSettings.ignoreCase) {
-            newValidDefArray.forEach((def) => {
+            newValidRespArray.forEach((def) => {
                 tempArray.push(def.toLowerCase());
             });
-            newValidDefArray = tempArray.slice();
+            newValidRespArray = tempArray.slice();
             tempArray = [];
-            newResponseArray.forEach((response) => {
+            newUserRespArray.forEach((response) => {
                 tempArray.push(response.toLowerCase());
             });
-            newResponseArray = tempArray.slice();
+            newUserRespArray = tempArray.slice();
             tempArray = [];
         }
         if (this.promptSettings.ignoreParentheses) {
             // Count num of open parentheses not matched with a close parenthesis
             // Only include char if count = 0
-            newValidDefArray.forEach((def) => {
-                let unmatchedOpenCount = 0;
-                let newDef = "";
-                for (let i = 0; i < def.length; i++) {
-                    if (def[i] === "(") {
-                        unmatchedOpenCount++;
-                    }
-                    else if (def[i] === ")") {
-                        if (unmatchedOpenCount === 0) {
-                            newDef += ")";
-                        }
-                        else {
-                            unmatchedOpenCount--;
-                        }
-                    }
-                    else {
-                        if (unmatchedOpenCount === 0) {
-                            newDef += def[i];
-                        }
-                    }
-                }
-                tempArray.push(newDef);
+            newValidRespArray.forEach((def) => {
+                tempArray.push(this.removeParentheses(def));
             });
-            newValidDefArray = tempArray.slice();
+            newValidRespArray = tempArray.slice();
             tempArray = [];
-            newResponseArray.forEach((resp) => {
-                let unmatchedOpenCount = 0;
-                let newResp = "";
-                for (let i = 0; i < resp.length; i++) {
-                    if (resp[i] === "(") {
-                        unmatchedOpenCount++;
-                    }
-                    else if (resp[i] === ")") {
-                        if (unmatchedOpenCount === 0) {
-                            newResp += ")";
-                        }
-                        else {
-                            unmatchedOpenCount--;
-                        }
-                    }
-                    else {
-                        newResp += resp[i];
-                    }
-                }
-                tempArray.push(newResp);
+            newUserRespArray.forEach((resp) => {
+                tempArray.push(this.removeParentheses(resp));
             });
-            newResponseArray = tempArray.slice();
+            newUserRespArray = tempArray.slice();
             tempArray = [];
         }
         if (this.promptSettings.ignoreWhitespace == IgnoreWhitespace.ends) {
-            newValidDefArray.forEach((def) => {
+            newValidRespArray.forEach((def) => {
                 tempArray.push(def.trim());
             });
-            newValidDefArray = tempArray.slice();
+            newValidRespArray = tempArray.slice();
             tempArray = [];
-            newResponseArray.forEach((resp) => {
+            newUserRespArray.forEach((resp) => {
                 tempArray.push(resp.trim());
             });
-            newResponseArray = tempArray.slice();
+            newUserRespArray = tempArray.slice();
             tempArray = [];
         }
         else if (this.promptSettings.ignoreWhitespace == IgnoreWhitespace.all) {
-            newValidDefArray.forEach((def) => {
+            newValidRespArray.forEach((def) => {
                 tempArray.push(def.replaceAll(new RegExp(/\s/, 'g'), ''));
             });
-            newValidDefArray = tempArray.slice();
+            newValidRespArray = tempArray.slice();
             tempArray = [];
-            newResponseArray.forEach((resp) => {
+            newUserRespArray.forEach((resp) => {
                 tempArray.push(resp.replaceAll(new RegExp(/\s/, 'g'), ''));
             });
-            newResponseArray = tempArray.slice();
+            newUserRespArray = tempArray.slice();
             tempArray = [];
         }
-        const isCorrect = (response) => newValidDefArray.includes(response);
-        return newResponseArray.every(isCorrect);
+        const isCorrect = (response) => newValidRespArray.includes(response);
+        return newUserRespArray.every(isCorrect);
+    }
+    removeParentheses(str) {
+        let unmatchedOpenCount = 0;
+        let returnStr = "";
+        for (let i = 0; i < str.length; i++) {
+            if (str[i] === "(") {
+                if (returnStr.slice(-1) === " ") {
+                    returnStr = returnStr.slice(0, -1);
+                }
+                unmatchedOpenCount += 1;
+            }
+            else if (str[i] === ")") {
+                if (unmatchedOpenCount > 0) {
+                    unmatchedOpenCount--;
+                }
+                else {
+                    returnStr += ")";
+                }
+            }
+            else if (unmatchedOpenCount === 0) {
+                returnStr += str[i];
+            }
+        }
+        return returnStr;
     }
     showAnswer() {
         this.html.answerDisplay.style.visibility = 'visible';
@@ -419,8 +425,13 @@ class Prompter {
         }
     }
     updatePromptSettings() {
-        this.promptSettings.ignoreCase = this.html.promptSettingsForm[0].checked;
-        this.promptSettings.ignoreParentheses = this.html.promptSettingsForm[1].checked;
+        for (let i = PromptCategory.terms; i <= PromptCategory.both; i++) {
+            if (this.html.promptSettingsForm[i].checked) {
+                this.promptSettings.promptCategory = i;
+            }
+        }
+        this.promptSettings.ignoreCase = this.html.promptSettingsForm[3].checked;
+        this.promptSettings.ignoreParentheses = this.html.promptSettingsForm[4].checked;
         for (let i = IgnoreWhitespace.none; i <= IgnoreWhitespace.all; i++) {
             if (this.html.promptSettingsForm[i].checked) {
                 this.promptSettings.ignoreWhitespace = i;
@@ -429,12 +440,14 @@ class Prompter {
     }
 }
 class PromptSettings {
-    constructor(ignoreCase, requireParentheses, ignoreWhitespace) {
+    constructor(promptCategory, ignoreCase, requireParentheses, ignoreWhitespace) {
+        this.promptCategory = promptCategory;
         this.ignoreCase = ignoreCase;
         this.ignoreParentheses = requireParentheses;
         this.ignoreWhitespace = ignoreWhitespace;
     }
 }
+// Nominals based on positions of inputs in form
 var PromptCategory;
 (function (PromptCategory) {
     PromptCategory[PromptCategory["terms"] = 0] = "terms";
@@ -444,8 +457,8 @@ var PromptCategory;
 // Nominals based on position of inputs in form
 var IgnoreWhitespace;
 (function (IgnoreWhitespace) {
-    IgnoreWhitespace[IgnoreWhitespace["none"] = 2] = "none";
-    IgnoreWhitespace[IgnoreWhitespace["ends"] = 3] = "ends";
-    IgnoreWhitespace[IgnoreWhitespace["all"] = 4] = "all";
+    IgnoreWhitespace[IgnoreWhitespace["none"] = 5] = "none";
+    IgnoreWhitespace[IgnoreWhitespace["ends"] = 6] = "ends";
+    IgnoreWhitespace[IgnoreWhitespace["all"] = 7] = "all";
 })(IgnoreWhitespace || (IgnoreWhitespace = {}));
 const site = new Site();

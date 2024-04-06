@@ -224,10 +224,11 @@ class Prompter {
     currentSet: StudySet;
     selectedTermIds: number[];
     currentStudyItem: StudyItem;
-    promptSettings: PromptSettings = new PromptSettings(true, true, IgnoreWhitespace.ends);
+    promptSettings: PromptSettings = new PromptSettings(PromptCategory.terms, true, true, IgnoreWhitespace.ends);
     siteSettings: SiteSettings;
     currentTermId: number = -1;
     termSelectionDisplayed: boolean = true;
+    promptingTerms: boolean;
 
     html = {
         promptDisplay: document.getElementById('prompt-display'),
@@ -334,8 +335,25 @@ class Prompter {
 
         this.currentStudyItem = this.currentSet.content[this.currentTermId];
 
-        this.html.promptDisplay.innerHTML = ("" + this.currentStudyItem.validTerms).replaceAll(',', ', ');
-        this.html.answerDisplay.innerHTML = ("" + this.currentStudyItem.validDefs).replaceAll(',', ', ');
+        if (this.promptSettings.promptCategory === PromptCategory.terms) {
+            this.promptingTerms = true;
+        }
+        else if (this.promptSettings.promptCategory === PromptCategory.defs) {
+            this.promptingTerms = false;
+        }
+        else {
+            this.promptingTerms = Math.random() < 0.5;
+        }
+
+        if (this.promptingTerms) {
+            this.html.promptDisplay.innerHTML = ("" + this.currentStudyItem.validTerms).replaceAll(',', ', ');
+            this.html.answerDisplay.innerHTML = ("" + this.currentStudyItem.validDefs).replaceAll(',', ', ');
+        }
+        else {
+            this.html.promptDisplay.innerHTML = ("" + this.currentStudyItem.validDefs).replaceAll(',', ', ');
+            this.html.answerDisplay.innerHTML = ("" + this.currentStudyItem.validTerms).replaceAll(',', ', ');
+        }
+        
     }
 
     processResponse(): void {
@@ -362,24 +380,30 @@ class Prompter {
     checkIfCorrect(response: string): boolean {
         
         let responses: string[] = response.split(', ');
-        /*return responses.every(isCorrect);*/
 
-        let newValidDefArray: string[] = this.currentStudyItem.validDefs.slice();
-        let newResponseArray: string[] = responses.slice();
+        let newValidRespArray: string[];
+        if (this.promptingTerms) {
+            newValidRespArray = this.currentStudyItem.validDefs.slice();
+        }
+        else {
+            newValidRespArray = this.currentStudyItem.validTerms.slice();
+        }
+
+        let newUserRespArray: string[] = responses.slice();
         let tempArray: string[] = [];
         
         if (this.promptSettings.ignoreCase) {
 
-            newValidDefArray.forEach((def) => {
+            newValidRespArray.forEach((def) => {
                 tempArray.push(def.toLowerCase());
             })
-            newValidDefArray = tempArray.slice();
+            newValidRespArray = tempArray.slice();
             tempArray = [];
 
-            newResponseArray.forEach((response) => {
+            newUserRespArray.forEach((response) => {
                 tempArray.push(response.toLowerCase());
             }); 
-            newResponseArray = tempArray.slice();
+            newUserRespArray = tempArray.slice();
             tempArray = [];
         }
 
@@ -387,87 +411,74 @@ class Prompter {
             // Count num of open parentheses not matched with a close parenthesis
             // Only include char if count = 0
 
-            newValidDefArray.forEach((def) => {
-                let unmatchedOpenCount = 0;
-                let newDef = "";
-                for (let i = 0; i < def.length; i++) {
-                    if (def[i] === "(") {
-                        unmatchedOpenCount++;
-                    }
-                    else if (def[i] === ")") {
-                        if (unmatchedOpenCount === 0) {
-                            newDef += ")";
-                        }
-                        else {
-                            unmatchedOpenCount--;
-                        }
-                    }
-                    else {
-                        if (unmatchedOpenCount === 0) {
-                            newDef += def[i];
-                        }
-                    }
-                }
-                tempArray.push(newDef);
+            newValidRespArray.forEach((def) => {
+                tempArray.push(this.removeParentheses(def));
             });
-            newValidDefArray = tempArray.slice();
+            newValidRespArray = tempArray.slice();
             tempArray = [];
 
-            newResponseArray.forEach((resp) => {
-                let unmatchedOpenCount = 0;
-                let newResp = "";
-                for (let i = 0; i < resp.length; i++) {
-                    if (resp[i] === "(") {
-                        unmatchedOpenCount++;
-                    }
-                    else if (resp[i] === ")") {
-                        if (unmatchedOpenCount === 0) {
-                            newResp += ")";
-                        }
-                        else {
-                            unmatchedOpenCount--;
-                        }
-                    }
-                    else {
-                        newResp += resp[i];
-                    }
-                }
-                tempArray.push(newResp);
+            newUserRespArray.forEach((resp) => {
+                tempArray.push(this.removeParentheses(resp));
             });
-            newResponseArray = tempArray.slice();
+            newUserRespArray = tempArray.slice();
             tempArray = [];
         }
 
         if (this.promptSettings.ignoreWhitespace == IgnoreWhitespace.ends) {
-            newValidDefArray.forEach((def) => {
+            newValidRespArray.forEach((def) => {
                 tempArray.push(def.trim());
             });
-            newValidDefArray = tempArray.slice();
+            newValidRespArray = tempArray.slice();
             tempArray = [];
 
-            newResponseArray.forEach((resp) => {
+            newUserRespArray.forEach((resp) => {
                 tempArray.push(resp.trim());
             });
-            newResponseArray = tempArray.slice();
+            newUserRespArray = tempArray.slice();
             tempArray = [];
         }
         else if (this.promptSettings.ignoreWhitespace == IgnoreWhitespace.all) {
-            newValidDefArray.forEach((def) => {
+            newValidRespArray.forEach((def) => {
                 tempArray.push(def.replaceAll(new RegExp(/\s/, 'g'), ''));
             });
-            newValidDefArray = tempArray.slice();
+            newValidRespArray = tempArray.slice();
             tempArray = [];
 
-            newResponseArray.forEach((resp) => {
+            newUserRespArray.forEach((resp) => {
                 tempArray.push(resp.replaceAll(new RegExp(/\s/, 'g'), ''));
             });
-            newResponseArray = tempArray.slice();
+            newUserRespArray = tempArray.slice();
             tempArray = [];
         }
 
-        const isCorrect = (response) => newValidDefArray.includes(response);
+        const isCorrect = (response) => newValidRespArray.includes(response);
 
-        return newResponseArray.every(isCorrect);
+        return newUserRespArray.every(isCorrect);
+    }
+
+    removeParentheses(str: string) {
+        let unmatchedOpenCount: number = 0;
+        let returnStr = "";
+        for (let i: number = 0; i < str.length; i++) {
+            if (str[i] === "(") {
+                if (returnStr.slice(-1) === " ") {
+                    returnStr = returnStr.slice(0, -1);
+                }
+                unmatchedOpenCount += 1;
+            }
+            else if (str[i] === ")") {
+                if (unmatchedOpenCount > 0) {
+                    unmatchedOpenCount--;
+                }
+                else {
+                    returnStr += ")";
+                }
+            }
+            else if (unmatchedOpenCount === 0) {
+                returnStr += str[i];
+            }
+        }
+        return returnStr;
     }
 
     showAnswer(): void {
@@ -517,9 +528,14 @@ class Prompter {
     }
 
     updatePromptSettings() {
-        this.promptSettings.ignoreCase = (<HTMLInputElement>this.html.promptSettingsForm[0]).checked;
-        this.promptSettings.ignoreParentheses = (<HTMLInputElement>this.html.promptSettingsForm[1]).checked;
-        for (let i: number = IgnoreWhitespace.none; i <= IgnoreWhitespace.all ; i++) {
+        for (let i: number = PromptCategory.terms; i <= PromptCategory.both; i++) {
+            if ((<HTMLInputElement>this.html.promptSettingsForm[i]).checked) {
+                this.promptSettings.promptCategory = i;
+            }
+        }
+        this.promptSettings.ignoreCase = (<HTMLInputElement>this.html.promptSettingsForm[3]).checked;
+        this.promptSettings.ignoreParentheses = (<HTMLInputElement>this.html.promptSettingsForm[4]).checked;
+        for (let i: number = IgnoreWhitespace.none; i <= IgnoreWhitespace.all; i++) {
             if ((<HTMLInputElement>this.html.promptSettingsForm[i]).checked) {
                 this.promptSettings.ignoreWhitespace = i;
             }
@@ -528,25 +544,28 @@ class Prompter {
 }
 
 class PromptSettings {
+    promptCategory: PromptCategory;
     ignoreCase: boolean;
     ignoreParentheses: boolean;
     ignoreWhitespace: IgnoreWhitespace;
-    constructor(ignoreCase, requireParentheses, ignoreWhitespace) {
+    constructor(promptCategory, ignoreCase, requireParentheses, ignoreWhitespace) {
+        this.promptCategory = promptCategory;
         this.ignoreCase = ignoreCase;
         this.ignoreParentheses = requireParentheses;
         this.ignoreWhitespace = ignoreWhitespace;
     }
 }
 
+// Nominals based on positions of inputs in form
 enum PromptCategory {
-    terms,
+    terms = 0,
     defs,
     both
 }
 
 // Nominals based on position of inputs in form
 enum IgnoreWhitespace {
-    none = 2,
+    none = 5,
     ends,
     all,
 }
