@@ -395,9 +395,22 @@ body {
             #prompt-settings-form tr, td, table {
                 border: none;
             }
+            
+            prompt-settings-form tr td input {
+                text-align: center;
+            }
 
             .radio {
                 padding-left: 2em;
+            }
+
+            #prompt-delay {
+                width: 56px;
+                background-color: var(--box-background-color);
+                color: var(--text-color);
+                border: 1px solid var(--box-border-color);
+                border-radius: 4px;
+                padding-left: 4px;
             }
                     
 

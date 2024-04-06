@@ -176,7 +176,7 @@ class StudyItem {
 }
 class Prompter {
     constructor(siteSettings) {
-        this.promptSettings = new PromptSettings(PromptCategory.terms, true, true, IgnoreWhitespace.ends);
+        this.promptSettings = new PromptSettings(PromptCategory.terms, 2000, true, true, IgnoreWhitespace.ends);
         this.currentTermId = -1;
         this.termSelectionDisplayed = true;
         this.html = {
@@ -195,7 +195,7 @@ class Prompter {
         this.siteSettings = siteSettings;
         this.html.inputForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            this.processResponse();
+            this.processResponseDelayed();
         });
         this.html.selectTermsForm.addEventListener('change', (e) => {
             this.updateSelectedTerms();
@@ -208,6 +208,9 @@ class Prompter {
         });
         this.html.promptSettingsForm.addEventListener('change', (e) => {
             this.updatePromptSettings();
+        });
+        this.html.promptSettingsForm.addEventListener('submit', (e) => {
+            e.preventDefault();
         });
     }
     loadSet(set) {
@@ -280,6 +283,10 @@ class Prompter {
             this.html.answerDisplay.innerHTML = ("" + this.currentStudyItem.validTerms).replaceAll(',', ', ');
         }
     }
+    async processResponseDelayed() {
+        const result = await this.processResponse();
+        this.html.promptDisplay.style.visibility = 'visible';
+    }
     processResponse() {
         this.html.inputForm.classList.remove('correct');
         this.html.inputForm.classList.remove('incorrect');
@@ -288,9 +295,15 @@ class Prompter {
         this.html.answerDisplay.style.visibility = 'hidden';
         if (this.checkIfCorrect(input)) {
             this.html.inputForm.classList.add('correct');
-            this.newPrompt();
             this.html.inputForm.reset();
             this.html.answerDisplay.style.visibility = 'hidden';
+            this.html.promptDisplay.style.visibility = 'hidden';
+            this.newPrompt();
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve();
+                }, this.promptSettings.newPromptDelay);
+            });
         }
         else {
             this.html.inputForm.classList.add('incorrect');
@@ -430,8 +443,17 @@ class Prompter {
                 this.promptSettings.promptCategory = i;
             }
         }
-        this.promptSettings.ignoreCase = this.html.promptSettingsForm[3].checked;
-        this.promptSettings.ignoreParentheses = this.html.promptSettingsForm[4].checked;
+        this.promptSettings.newPromptDelay = parseInt(this.html.promptSettingsForm[3].value);
+        if (this.promptSettings.newPromptDelay < 0) {
+            this.promptSettings.newPromptDelay = 0;
+            this.html.promptSettingsForm[3].value = '0';
+        }
+        else if (this.promptSettings.newPromptDelay > 9999) {
+            this.promptSettings.newPromptDelay = 9999;
+            this.html.promptSettingsForm[3].value = '9999';
+        }
+        this.promptSettings.ignoreCase = this.html.promptSettingsForm[4].checked;
+        this.promptSettings.ignoreParentheses = this.html.promptSettingsForm[5].checked;
         for (let i = IgnoreWhitespace.none; i <= IgnoreWhitespace.all; i++) {
             if (this.html.promptSettingsForm[i].checked) {
                 this.promptSettings.ignoreWhitespace = i;
@@ -440,8 +462,9 @@ class Prompter {
     }
 }
 class PromptSettings {
-    constructor(promptCategory, ignoreCase, requireParentheses, ignoreWhitespace) {
+    constructor(promptCategory, newPromptDelay, ignoreCase, requireParentheses, ignoreWhitespace) {
         this.promptCategory = promptCategory;
+        this.newPromptDelay = newPromptDelay;
         this.ignoreCase = ignoreCase;
         this.ignoreParentheses = requireParentheses;
         this.ignoreWhitespace = ignoreWhitespace;
@@ -457,8 +480,8 @@ var PromptCategory;
 // Nominals based on position of inputs in form
 var IgnoreWhitespace;
 (function (IgnoreWhitespace) {
-    IgnoreWhitespace[IgnoreWhitespace["none"] = 5] = "none";
-    IgnoreWhitespace[IgnoreWhitespace["ends"] = 6] = "ends";
-    IgnoreWhitespace[IgnoreWhitespace["all"] = 7] = "all";
+    IgnoreWhitespace[IgnoreWhitespace["none"] = 6] = "none";
+    IgnoreWhitespace[IgnoreWhitespace["ends"] = 7] = "ends";
+    IgnoreWhitespace[IgnoreWhitespace["all"] = 8] = "all";
 })(IgnoreWhitespace || (IgnoreWhitespace = {}));
 const site = new Site();

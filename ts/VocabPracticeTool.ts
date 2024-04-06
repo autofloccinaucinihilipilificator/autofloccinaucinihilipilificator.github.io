@@ -224,7 +224,7 @@ class Prompter {
     currentSet: StudySet;
     selectedTermIds: number[];
     currentStudyItem: StudyItem;
-    promptSettings: PromptSettings = new PromptSettings(PromptCategory.terms, true, true, IgnoreWhitespace.ends);
+    promptSettings: PromptSettings = new PromptSettings(PromptCategory.terms, 2000, true, true, IgnoreWhitespace.ends);
     siteSettings: SiteSettings;
     currentTermId: number = -1;
     termSelectionDisplayed: boolean = true;
@@ -249,7 +249,7 @@ class Prompter {
 
         this.html.inputForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            this.processResponse();
+            this.processResponseDelayed();
         });
 
         this.html.selectTermsForm.addEventListener('change', (e) => {
@@ -266,6 +266,10 @@ class Prompter {
 
         this.html.promptSettingsForm.addEventListener('change', (e) => {
             this.updatePromptSettings();
+        });
+
+        this.html.promptSettingsForm.addEventListener('submit', (e) => {
+            e.preventDefault();
         });
     }
 
@@ -356,7 +360,12 @@ class Prompter {
         
     }
 
-    processResponse(): void {
+    async processResponseDelayed() {
+        const result = await this.processResponse();
+        this.html.promptDisplay.style.visibility = 'visible';
+    }
+
+    processResponse(): Promise<void> {
         this.html.inputForm.classList.remove('correct');
         this.html.inputForm.classList.remove('incorrect');
 
@@ -368,9 +377,15 @@ class Prompter {
 
         if (this.checkIfCorrect(input)) {
             this.html.inputForm.classList.add('correct');
-            this.newPrompt();
             this.html.inputForm.reset();
             this.html.answerDisplay.style.visibility = 'hidden';
+            this.html.promptDisplay.style.visibility = 'hidden';
+            this.newPrompt();
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve();
+                }, this.promptSettings.newPromptDelay);
+            });
         }
         else {
             this.html.inputForm.classList.add('incorrect');
@@ -533,8 +548,17 @@ class Prompter {
                 this.promptSettings.promptCategory = i;
             }
         }
-        this.promptSettings.ignoreCase = (<HTMLInputElement>this.html.promptSettingsForm[3]).checked;
-        this.promptSettings.ignoreParentheses = (<HTMLInputElement>this.html.promptSettingsForm[4]).checked;
+        this.promptSettings.newPromptDelay = parseInt((<HTMLInputElement>this.html.promptSettingsForm[3]).value);
+        if (this.promptSettings.newPromptDelay < 0) {
+            this.promptSettings.newPromptDelay = 0;
+            (<HTMLInputElement>this.html.promptSettingsForm[3]).value = '0';
+        }
+        else if (this.promptSettings.newPromptDelay > 9999) {
+            this.promptSettings.newPromptDelay = 9999;
+            (<HTMLInputElement>this.html.promptSettingsForm[3]).value = '9999';
+        }
+        this.promptSettings.ignoreCase = (<HTMLInputElement>this.html.promptSettingsForm[4]).checked;
+        this.promptSettings.ignoreParentheses = (<HTMLInputElement>this.html.promptSettingsForm[5]).checked;
         for (let i: number = IgnoreWhitespace.none; i <= IgnoreWhitespace.all; i++) {
             if ((<HTMLInputElement>this.html.promptSettingsForm[i]).checked) {
                 this.promptSettings.ignoreWhitespace = i;
@@ -545,11 +569,13 @@ class Prompter {
 
 class PromptSettings {
     promptCategory: PromptCategory;
+    newPromptDelay: number;
     ignoreCase: boolean;
     ignoreParentheses: boolean;
     ignoreWhitespace: IgnoreWhitespace;
-    constructor(promptCategory, ignoreCase, requireParentheses, ignoreWhitespace) {
+    constructor(promptCategory, newPromptDelay, ignoreCase, requireParentheses, ignoreWhitespace) {
         this.promptCategory = promptCategory;
+        this.newPromptDelay = newPromptDelay;
         this.ignoreCase = ignoreCase;
         this.ignoreParentheses = requireParentheses;
         this.ignoreWhitespace = ignoreWhitespace;
@@ -565,7 +591,7 @@ enum PromptCategory {
 
 // Nominals based on position of inputs in form
 enum IgnoreWhitespace {
-    none = 5,
+    none = 6,
     ends,
     all,
 }
