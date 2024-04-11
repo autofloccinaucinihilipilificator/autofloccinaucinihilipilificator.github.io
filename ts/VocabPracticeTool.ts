@@ -100,14 +100,14 @@ class SetManager {
         let validTitle: boolean = true;
         let validData: boolean = true;
 
-        if (this.html.setTitleInput.value === "") {
-            this.html.setTitleErrorBox.innerText = "Can't make a set without a title!";
+        if (this.html.setTitleInput.value === '') {
+            this.html.setTitleErrorBox.innerText = 'Can\'t make a set without a title!';
             this.html.setTitleDiv.style.borderColor = 'var(--error-color)';
             validTitle = false;
         }
 
-        if (this.html.setDataInput.value === "") {
-            this.html.setDataErrorBox.innerText = "Can't make a set without any data!";
+        if (this.html.setDataInput.value === '') {
+            this.html.setDataErrorBox.innerText = 'Can\'t make a set without any data!';
             this.html.setDataDiv.style.borderColor = 'var(--error-color)';
             validData = false;
         }
@@ -115,7 +115,7 @@ class SetManager {
             const setDataLines: string[] = this.html.setDataInput.value.split('\n');
             let invalidStudyItems: number[] = [];
             for (let i = 0; i < setDataLines.length; i++) {
-                if (setDataLines[i].split(";").length !== 2 && setDataLines[i] !== "") {
+                if (setDataLines[i].split(';').length !== 2 && setDataLines[i] !== '') {
                     invalidStudyItems.push(i + 1);
                 }
             }
@@ -146,13 +146,13 @@ class SetManager {
             if (!validTitle) {
                 this.html.setTitleInput.addEventListener('input', (e) => {
                     this.html.setTitleDiv.style.borderColor = 'var(--box-border-color)';
-                    this.html.setTitleErrorBox.innerText = "";
+                    this.html.setTitleErrorBox.innerText = '';
                 }, { once: true } );
             }
             if (!validData) {
                 this.html.setDataInput.addEventListener('input', (e) => {
                     this.html.setDataDiv.style.borderColor = 'var(--box-border-color)';
-                    this.html.setDataErrorBox.innerText = "";
+                    this.html.setDataErrorBox.innerText = '';
                 }, { once: true } );
             }
         }
@@ -187,6 +187,59 @@ class SetManager {
     }
 }
 
+class Folder {
+    title: string;
+    description: string
+    setCount: number;
+    data: (StudySet | Folder)[];
+
+    constructor(title: string, description: string, data: (StudySet | Folder)[]) {
+        this.data = data;
+        this.title = title;
+        this.description = description;
+        this.setCount = this.countSets();
+    }
+
+    countSets(): number {
+        if (this.data.every(item => { item instanceof StudySet; })) {
+            return this.data.length;
+        }
+        else {
+            let i: number = 0;
+            this.data.forEach(item => {
+                if (item instanceof StudySet) {
+                    i++;
+                }
+                else {
+                    i += item.countSets();
+                }
+            });
+            return i;
+        }
+    }
+
+    getSet(currentFolder: Folder, index: number): StudySet {
+        let i: number = 0;
+        let currentItem: StudySet | Folder;
+        while (true) {
+            currentItem = currentFolder.data[i];
+            if (currentItem instanceof StudySet && i < index) {
+                i++;
+            }
+            else if (currentItem instanceof StudySet && i == index) {
+                return currentItem as StudySet;
+            }
+            else if ((currentItem as Folder).countSets() <= index - i) {
+                i++;
+                index -= (currentItem as Folder).setCount - 1;
+            }
+            else {
+                return (currentItem as Folder).getSet(currentItem as Folder, index - i);
+            }
+        }
+    }
+}
+
 enum SetBuilderMode {
     new,
     edit,
@@ -203,7 +256,7 @@ class StudySet {
         this.description = description;
         this.content = [];
         contentData.split('\n').forEach((item) => {
-            if (item !== "") {
+            if (item !== '') {
                 this.content.push(new StudyItem(item));
             }
         });
@@ -350,12 +403,12 @@ class Prompter {
         }
 
         if (this.promptingTerms) {
-            this.html.promptDisplay.innerHTML = ("" + this.currentStudyItem.validTerms).replaceAll(',', ', ');
-            this.html.answerDisplay.innerHTML = ("" + this.currentStudyItem.validDefs).replaceAll(',', ', ');
+            this.html.promptDisplay.innerHTML = ('' + this.currentStudyItem.validTerms).replaceAll(',', ', ');
+            this.html.answerDisplay.innerHTML = ('' + this.currentStudyItem.validDefs).replaceAll(',', ', ');
         }
         else {
-            this.html.promptDisplay.innerHTML = ("" + this.currentStudyItem.validDefs).replaceAll(',', ', ');
-            this.html.answerDisplay.innerHTML = ("" + this.currentStudyItem.validTerms).replaceAll(',', ', ');
+            this.html.promptDisplay.innerHTML = ('' + this.currentStudyItem.validDefs).replaceAll(',', ', ');
+            this.html.answerDisplay.innerHTML = ('' + this.currentStudyItem.validTerms).replaceAll(',', ', ');
         }
         
     }
@@ -473,20 +526,20 @@ class Prompter {
 
     removeParentheses(str: string) {
         let unmatchedOpenCount: number = 0;
-        let returnStr = "";
+        let returnStr = '';
         for (let i: number = 0; i < str.length; i++) {
-            if (str[i] === "(") {
-                if (returnStr.slice(-1) === " ") {
+            if (str[i] === '(') {
+                if (returnStr.slice(-1) === ' ') {
                     returnStr = returnStr.slice(0, -1);
                 }
                 unmatchedOpenCount += 1;
             }
-            else if (str[i] === ")") {
+            else if (str[i] === ')') {
                 if (unmatchedOpenCount > 0) {
                     unmatchedOpenCount--;
                 }
                 else {
-                    returnStr += ")";
+                    returnStr += ')';
                 }
             }
             else if (unmatchedOpenCount === 0) {

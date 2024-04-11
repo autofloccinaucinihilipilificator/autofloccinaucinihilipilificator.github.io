@@ -78,13 +78,13 @@ class SetManager {
     processSaveSet() {
         let validTitle = true;
         let validData = true;
-        if (this.html.setTitleInput.value === "") {
-            this.html.setTitleErrorBox.innerText = "Can't make a set without a title!";
+        if (this.html.setTitleInput.value === '') {
+            this.html.setTitleErrorBox.innerText = 'Can\'t make a set without a title!';
             this.html.setTitleDiv.style.borderColor = 'var(--error-color)';
             validTitle = false;
         }
-        if (this.html.setDataInput.value === "") {
-            this.html.setDataErrorBox.innerText = "Can't make a set without any data!";
+        if (this.html.setDataInput.value === '') {
+            this.html.setDataErrorBox.innerText = 'Can\'t make a set without any data!';
             this.html.setDataDiv.style.borderColor = 'var(--error-color)';
             validData = false;
         }
@@ -92,7 +92,7 @@ class SetManager {
             const setDataLines = this.html.setDataInput.value.split('\n');
             let invalidStudyItems = [];
             for (let i = 0; i < setDataLines.length; i++) {
-                if (setDataLines[i].split(";").length !== 2 && setDataLines[i] !== "") {
+                if (setDataLines[i].split(';').length !== 2 && setDataLines[i] !== '') {
                     invalidStudyItems.push(i + 1);
                 }
             }
@@ -117,13 +117,13 @@ class SetManager {
             if (!validTitle) {
                 this.html.setTitleInput.addEventListener('input', (e) => {
                     this.html.setTitleDiv.style.borderColor = 'var(--box-border-color)';
-                    this.html.setTitleErrorBox.innerText = "";
+                    this.html.setTitleErrorBox.innerText = '';
                 }, { once: true });
             }
             if (!validData) {
                 this.html.setDataInput.addEventListener('input', (e) => {
                     this.html.setDataDiv.style.borderColor = 'var(--box-border-color)';
-                    this.html.setDataErrorBox.innerText = "";
+                    this.html.setDataErrorBox.innerText = '';
                 }, { once: true });
             }
         }
@@ -150,6 +150,51 @@ class SetManager {
         this.html.setForm.reset();
     }
 }
+class Folder {
+    constructor(title, description, data) {
+        this.data = data;
+        this.title = title;
+        this.description = description;
+        this.setCount = this.countSets();
+    }
+    countSets() {
+        if (this.data.every(item => { item instanceof StudySet; })) {
+            return this.data.length;
+        }
+        else {
+            let i = 0;
+            this.data.forEach(item => {
+                if (item instanceof StudySet) {
+                    i++;
+                }
+                else {
+                    i += item.countSets();
+                }
+            });
+            return i;
+        }
+    }
+    getSet(currentFolder, index) {
+        let i = 0;
+        let currentItem;
+        while (true) {
+            currentItem = currentFolder.data[i];
+            if (currentItem instanceof StudySet && i < index) {
+                i++;
+            }
+            else if (currentItem instanceof StudySet && i == index) {
+                return currentItem;
+            }
+            else if (currentItem.countSets() <= index - i) {
+                i++;
+                index -= currentItem.setCount - 1;
+            }
+            else {
+                return currentItem.getSet(currentItem, index - i);
+            }
+        }
+    }
+}
 var SetBuilderMode;
 (function (SetBuilderMode) {
     SetBuilderMode[SetBuilderMode["new"] = 0] = "new";
@@ -162,7 +207,7 @@ class StudySet {
         this.description = description;
         this.content = [];
         contentData.split('\n').forEach((item) => {
-            if (item !== "") {
+            if (item !== '') {
                 this.content.push(new StudyItem(item));
             }
         });
@@ -275,12 +320,12 @@ class Prompter {
             this.promptingTerms = Math.random() < 0.5;
         }
         if (this.promptingTerms) {
-            this.html.promptDisplay.innerHTML = ("" + this.currentStudyItem.validTerms).replaceAll(',', ', ');
-            this.html.answerDisplay.innerHTML = ("" + this.currentStudyItem.validDefs).replaceAll(',', ', ');
+            this.html.promptDisplay.innerHTML = ('' + this.currentStudyItem.validTerms).replaceAll(',', ', ');
+            this.html.answerDisplay.innerHTML = ('' + this.currentStudyItem.validDefs).replaceAll(',', ', ');
         }
         else {
-            this.html.promptDisplay.innerHTML = ("" + this.currentStudyItem.validDefs).replaceAll(',', ', ');
-            this.html.answerDisplay.innerHTML = ("" + this.currentStudyItem.validTerms).replaceAll(',', ', ');
+            this.html.promptDisplay.innerHTML = ('' + this.currentStudyItem.validDefs).replaceAll(',', ', ');
+            this.html.answerDisplay.innerHTML = ('' + this.currentStudyItem.validTerms).replaceAll(',', ', ');
         }
     }
     async processResponseDelayed() {
@@ -375,20 +420,20 @@ class Prompter {
     }
     removeParentheses(str) {
         let unmatchedOpenCount = 0;
-        let returnStr = "";
+        let returnStr = '';
         for (let i = 0; i < str.length; i++) {
-            if (str[i] === "(") {
-                if (returnStr.slice(-1) === " ") {
+            if (str[i] === '(') {
+                if (returnStr.slice(-1) === ' ') {
                     returnStr = returnStr.slice(0, -1);
                 }
                 unmatchedOpenCount += 1;
             }
-            else if (str[i] === ")") {
+            else if (str[i] === ')') {
                 if (unmatchedOpenCount > 0) {
                     unmatchedOpenCount--;
                 }
                 else {
-                    returnStr += ")";
+                    returnStr += ')';
                 }
             }
             else if (unmatchedOpenCount === 0) {

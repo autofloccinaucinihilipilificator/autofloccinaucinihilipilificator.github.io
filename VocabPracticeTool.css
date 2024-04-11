@@ -395,10 +395,6 @@ body {
             #prompt-settings-form tr, td, table {
                 border: none;
             }
-            
-            prompt-settings-form tr td input {
-                text-align: center;
-            }
 
             .radio {
                 padding-left: 2em;
