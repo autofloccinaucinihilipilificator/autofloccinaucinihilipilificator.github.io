@@ -6,15 +6,13 @@ A rudimentary website to help people (mostly myself) practice vocab. Hosted [her
 
 Now:
 
-- Add folders to the set builder
-- Implement downloading, loading sets
-- Add editing sets
-- Add deleting sets
-- Add reordering sets
-
+- Implement folders
+- Implement buttons
+- Style buttons
+- Implement downloading and uploading sets
 
 Later:
-- Make things appear better at high zooms
-- Make things appear better for other devices
 - Dynamically add rows to the set builder
-- Accessibility settings
+- Add accessibility settings
+- Add website customization
+- Add saving sets & settings across sessions
