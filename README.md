@@ -12,6 +12,8 @@ Now:
 - Implement downloading and uploading sets
 
 Later:
+
+- Style checkboxes & radios in settings
 - Dynamically add rows to the set builder
 - Add accessibility settings
 - Add website customization
