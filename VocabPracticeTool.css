@@ -186,7 +186,7 @@ body {
 
     #set-explorer-bottom-bar button {
         color: var(--text-color);
-        background-color: var(--box-background-color);
+        background-color: var(--input-field-background-color);
         font-size: 0.75em;
         border: 2px solid var(--title-background-color);
         border-left: none;
