@@ -177,7 +177,19 @@ class SetManager {
 
     updateSetList() {
         for (let i = 0; i < this.setList.length; i++) {
-            this.html.setListRows[i].innerHTML = `<button title="${this.setList[i].description}" onclick="site.loadSet(${i});">${this.setList[i].title}</button>`;
+            // `<button title="${this.setList[i].description}" onclick="site.loadSet(${i});">${this.setList[i].title}</button>`;
+            this.html.setListRows[i].innerHTML = `
+    <td class="set-col"><button type="button" title="${this.setList[i].description}" onclick="site.loadSet(${i})">${this.setList[i].title}</button></td>
+    <td class="button-col">
+        <div class="set-buttons">
+            <div class="delete-set"></div>
+            <div class="edit-set"></div>
+            <div class="set-arrows">
+                <div class="set-up-arrow"></div>
+                <div class="set-down-arrow"></div>
+            </div>
+        </div>
+    </td>`
         }
     }
 
@@ -190,17 +202,17 @@ class SetManager {
 class Folder {
     title: string;
     description: string
-    setCount: number;
+    itemCount: number;
     data: (StudySet | Folder)[];
 
     constructor(title: string, description: string, data: (StudySet | Folder)[]) {
         this.data = data;
         this.title = title;
         this.description = description;
-        this.setCount = this.countSets();
+        this.itemCount = this.countItems();
     }
 
-    countSets(): number {
+    countItems(): number {
         if (this.data.every(item => { item instanceof StudySet; })) {
             return this.data.length;
         }
@@ -211,30 +223,30 @@ class Folder {
                     i++;
                 }
                 else {
-                    i += item.countSets();
+                    i += item.itemCount + 1;
                 }
             });
             return i;
         }
     }
 
-    getSet(currentFolder: Folder, index: number): StudySet {
+    getItem(currentFolder: Folder, index: number): StudySet | Folder {
         let i: number = 0;
         let currentItem: StudySet | Folder;
         while (true) {
             currentItem = currentFolder.data[i];
-            if (currentItem instanceof StudySet && i < index) {
+            if (i == index) {
+                return currentItem;
+            }
+            else if (currentItem instanceof StudySet) {
                 i++;
             }
-            else if (currentItem instanceof StudySet && i == index) {
-                return currentItem as StudySet;
-            }
-            else if ((currentItem as Folder).countSets() <= index - i) {
+            else if ((currentItem as Folder).itemCount < index - i) {
                 i++;
-                index -= (currentItem as Folder).setCount - 1;
+                index -= (currentItem as Folder).itemCount;
             }
             else {
-                return (currentItem as Folder).getSet(currentItem as Folder, index - i);
+                return (currentItem as Folder).getItem(currentItem as Folder, index - i - 1);
             }
         }
     }

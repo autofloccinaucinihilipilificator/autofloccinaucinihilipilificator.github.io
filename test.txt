@@ -20,20 +20,20 @@ const testFolder = new Folder("title", "desc", [
 	new StudySet("0", "", ""),
 	new StudySet("1", "", ""),
 	new StudySet("2", "", ""),
-	new Folder("title2", "desc2", [
-		new StudySet("3", "", ""),
+	new Folder("3", "", [
 		new StudySet("4", "", ""),
-		new Folder("title3", "desc3", [
-			new StudySet("5", "", ""),
-			new StudySet("6", "", ""),
-		]),
-		new StudySet("7", "", ""),
-		new Folder("title4", "desc4", [
+		new StudySet("5", "", ""),
+		new Folder("6", "", [
+			new StudySet("7", "", ""),
 			new StudySet("8", "", ""),
-			new StudySet("9", "", ""),
-			new StudySet("10", "", ""),
 		]),
-		new StudySet("11", "", ""),
+		new StudySet("9", "", ""),
+		new Folder("10", "", [
+			new StudySet("11", "", ""),
+			new StudySet("12", "", ""),
+			new StudySet("13", "", ""),
+		]),
+		new StudySet("14", "", ""),
 	]),
-	new StudySet("12", "", "")
+	new StudySet("15", "", "")
 ]);

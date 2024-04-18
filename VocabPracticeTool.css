@@ -3,6 +3,7 @@
 * {
     --site-background-color: rgb(20, 30, 50);
     --box-background-color: rgb(80, 90, 120);
+    --input-field-background-color: rgb(66, 74, 102);
     --box-border-color: rgb(0, 0, 0);
     --title-background-color: rgb(35, 50, 100);
     --text-color: rgb(230, 230, 230);
@@ -72,92 +73,145 @@ body {
     flex: 1;
     display: grid;
     grid-template-rows: 40px calc(100% - 40px - 1 * 30px) 30px;
-    min-width: 96px;
+    min-width: 168px;
     max-width: 98%;
 }
 
-    #set-explorer-title {
-        grid-row: 1;
-    }
+#set-explorer-title {
+    grid-row: 1;
+}
 
-    #set-explorer div {
-        overflow: auto;
-    }
+#set-explorer div {
+    overflow: auto;
+}
 
-    #set-explorer table {
-        border-collapse: collapse;
-        height: 100%;
+#set-explorer table {
+    border-collapse: collapse;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+}
+
+    #set-explorer table button {
+        background-color: transparent;
+        font-size: 0.8em;
+        height: 24px;
+        padding: 4px;
+        text-align: left;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        white-space: nowrap;
         width: 100%;
-        margin: 0;
     }
 
-        #set-explorer table button {
-            background-color: transparent;
-            font-size: 0.8em;
-            height: 24px;
-            padding: 4px;
-            text-align: left;
-            font-family: Verdana, Geneva, Tahoma, sans-serif;
-            white-space: nowrap;
-            width: 100%;
-        }
+#set-explorer table, tr, td {
+    border: 1px solid var(--title-background-color);
+    border-collapse: collapse
+}
 
-        #set-explorer table, tr, td {
-            border: 1px solid var(--title-background-color);
-            border-collapse: collapse
-        }
-
-        #set-explorer table tr:nth-child(odd) {
-            background-color: var(--set-background-color-1);
-        }
-
-        #set-explorer table tr:nth-child(even) {
-            background-color: var(--set-background-color-2);
-        }
-
-        .selected { /* selected set */
-            background-color: var(--selected-set-background-color) !important;
-        }
-
-    #set-explorer-bottom-bar {
-        grid-row: 3;
-        display: grid;
+    #set-explorer table tr:nth-child(odd) {
+        background-color: var(--set-background-color-1);
     }
 
-        #set-explorer-bottom-bar button {
-            color: var(--text-color);
-            background-color: var(--box-background-color);
-            font-size: 0.75em;
-            border: 2px solid var(--title-background-color);
-            border-left: none;
-            border-right: none;
-            border-bottom: none;
-            padding: 6px;
-            text-align: center;
-            vertical-align: middle;
-            border-bottom-left-radius: 6px;
-            border-bottom-right-radius: 6px;
-            overflow: hidden;
-        }
+    #set-explorer table tr:nth-child(even) {
+        background-color: var(--set-background-color-2);
+    }
 
-        #new-set {
-            grid-row: 1;
-            grid-column: 1;
-        }
+#set-explorer table tr td {
+    position: -webkit-sticky;
+    position: sticky;
+}
 
-        #edit-set {
-            grid-row: 2;
-            grid-column: 1;
-        }
+.set-col {
+    width: calc(100% - 60px);
+    min-width: calc(100% - 60px);
+    max-width: calc(100% - 60px);
+    right: 63px;
+}
 
-        #load-sets {
-            grid-row: 3;
-        }
+.button-col {
+    width: 60px;
+    min-width: 60px;
+    max-width: 60px;
+    right: 3px;
+}
 
-        #download-sets {
-            grid-row: 4;
-            
-        }
+.selected { /* selected set */
+    background-color: var(--selected-set-background-color) !important;
+}
+
+.set-buttons {
+    display: grid;
+    height: 20px;
+    width: 60px;
+    grid-template-rows: 20px;
+    grid-template-columns: 20px 20px 20px;
+}
+
+.delete-set {
+    grid-row: 1;
+    grid-column: 1;
+    background-color: red;
+}
+
+.edit-set {
+    grid-row: 1;
+    grid-column: 2;
+    background-color: yellow;
+}
+
+.set-arrows {
+    grid-row: 1;
+    grid-column: 3;
+    display: grid;
+    grid-template-rows: 10px 10px;
+    grid-template-columns: 20px;
+}
+
+.set-up-arrow {
+    grid-row: 1;
+    grid-column: 1;
+    background-color: lime;
+}
+
+.set-down-arrow {
+    grid-row: 2;
+    grid-column: 1;
+    background-color: blue;
+}
+
+#set-explorer-bottom-bar {
+    grid-row: 3;
+    display: grid;
+}
+
+    #set-explorer-bottom-bar button {
+        color: var(--text-color);
+        background-color: var(--box-background-color);
+        font-size: 0.75em;
+        border: 2px solid var(--title-background-color);
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+        padding: 6px;
+        text-align: center;
+        vertical-align: middle;
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;
+        overflow: hidden;
+    }
+
+#new-set {
+    grid-row: 1;
+    grid-column: 1;
+}
+
+#load-sets {
+    grid-row: 2;
+}
+
+#download-sets {
+    grid-row: 3;
+}
 
 /* General center column --------------------------------------------------- */
 
@@ -215,10 +269,10 @@ body {
     }
 
         #input-form {
-            background-color: var(--box-background-color);
+            background-color: var(--input-field-background-color);
             border-radius: 6px;
             height: 100%;
-        }
+        }   
 
         @keyframes correct {
             from {
@@ -269,7 +323,7 @@ body {
     }
 
         #buttons button {
-            background-color: var(--box-background-color);
+            background-color: var(--input-field-background-color);
             font-size: 16px;
             font-family: Verdana, Geneva, Tahoma, sans-serif;
             border-radius: 6px;
@@ -327,7 +381,7 @@ body {
 
                 #toggle-term-selection-view {
                     box-sizing: content-box;
-                    background-color: var(--box-background-color);
+                    background-color: var(--input-field-background-color);
                     color: var(--text-color);
                     border: 2px solid var(--box-border-color);
                     margin-right: 6px;
@@ -402,7 +456,7 @@ body {
 
             #prompt-delay {
                 width: 56px;
-                background-color: var(--box-background-color);
+                background-color: var(--input-field-background-color);
                 color: var(--text-color);
                 border: 1px solid var(--box-border-color);
                 border-radius: 4px;
@@ -414,6 +468,7 @@ body {
 
 #explainer {
     flex: 1;
+    min-width: 200px;
     max-width: 98%;
 }
 
@@ -468,7 +523,7 @@ body {
     }
 
         .set-form-div {
-            background-color: var(--box-background-color);
+            background-color: var(--input-field-background-color);
             border: 2px solid var(--box-border-color);
             border-radius: 8px;
             overflow: hidden;
@@ -546,7 +601,7 @@ body {
 
         #set-builder-bottom-bar button {
             color: var(--text-color);
-            background-color: var(--box-background-color);
+            background-color: var(--input-field-background-color);
             flex: 1;
             font-size: 16px;
             border: 2px solid var(--title-background-color);

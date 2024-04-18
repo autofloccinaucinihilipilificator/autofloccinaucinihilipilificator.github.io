@@ -142,7 +142,19 @@ class SetManager {
     }
     updateSetList() {
         for (let i = 0; i < this.setList.length; i++) {
-            this.html.setListRows[i].innerHTML = `<button title="${this.setList[i].description}" onclick="site.loadSet(${i});">${this.setList[i].title}</button>`;
+            // `<button title="${this.setList[i].description}" onclick="site.loadSet(${i});">${this.setList[i].title}</button>`;
+            this.html.setListRows[i].innerHTML = `
+    <td class="set-col"><button type="button" title="${this.setList[i].description}" onclick="site.loadSet(${i})">${this.setList[i].title}</button></td>
+    <td class="button-col">
+        <div class="set-buttons">
+            <div class="delete-set"></div>
+            <div class="edit-set"></div>
+            <div class="set-arrows">
+                <div class="set-up-arrow"></div>
+                <div class="set-down-arrow"></div>
+            </div>
+        </div>
+    </td>`;
         }
     }
     exitSetBuilder() {
@@ -155,9 +167,9 @@ class Folder {
         this.data = data;
         this.title = title;
         this.description = description;
-        this.setCount = this.countSets();
+        this.itemCount = this.countItems();
     }
-    countSets() {
+    countItems() {
         if (this.data.every(item => { item instanceof StudySet; })) {
             return this.data.length;
         }
@@ -168,29 +180,29 @@ class Folder {
                     i++;
                 }
                 else {
-                    i += item.countSets();
+                    i += item.itemCount + 1;
                 }
             });
             return i;
         }
     }
-    getSet(currentFolder, index) {
+    getItem(currentFolder, index) {
         let i = 0;
         let currentItem;
         while (true) {
             currentItem = currentFolder.data[i];
-            if (currentItem instanceof StudySet && i < index) {
-                i++;
-            }
-            else if (currentItem instanceof StudySet && i == index) {
+            if (i == index) {
                 return currentItem;
             }
-            else if (currentItem.countSets() <= index - i) {
+            else if (currentItem instanceof StudySet) {
                 i++;
-                index -= currentItem.setCount - 1;
+            }
+            else if (currentItem.itemCount < index - i) {
+                i++;
+                index -= currentItem.itemCount;
             }
             else {
-                return currentItem.getSet(currentItem, index - i);
+                return currentItem.getItem(currentItem, index - i - 1);
             }
         }
     }
