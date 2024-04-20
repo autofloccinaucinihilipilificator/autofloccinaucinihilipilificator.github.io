@@ -1,4 +1,4 @@
-﻿class Site {
+﻿/*class Site {
     setManager: SetManager;
     prompter: Prompter;
     siteSettingsManager: SiteSettingsManager;
@@ -74,10 +74,6 @@ class SetManager {
         this.setList = setList;
         this.siteSettings = settings;
         this.selectedSetIndex = -1;
-
-        this.html.newSet.addEventListener('click', (e) => {
-            this.newSet();
-        });
 
         this.html.setForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -262,6 +258,7 @@ class StudySet {
     title: string;
     description: string;
     content: StudyItem[];
+    index: number;
 
     constructor(title: string, description: string, contentData: string) {
         this.title = title;
@@ -661,4 +658,4 @@ enum IgnoreWhitespace {
     all,
 }
 
-const site = new Site();
+const site = new Site();*/

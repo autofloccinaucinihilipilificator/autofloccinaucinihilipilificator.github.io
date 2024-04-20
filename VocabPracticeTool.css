@@ -16,8 +16,8 @@
     --selected-set-background-color: rgb(200, 200, 140);
     --link-color: blue;
     --error-color: red;
-    --scrollbar-background-color: rgb(64, 80, 112);
-    --scrollbar-bar-color: rgb(35, 50, 100);
+    --scrollbar-background-color: var(--title-background-color);
+    --scrollbar-bar-color: var(--input-field-background-color);
     border: none;
     outline: none;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -105,6 +105,8 @@ body {
 
 #set-explorer table, tr, td {
     border: 1px solid var(--title-background-color);
+    border-left: none;
+    border-right: none;
     border-collapse: collapse
 }
 
@@ -115,6 +117,12 @@ body {
     #set-explorer table tr:nth-child(even) {
         background-color: var(--set-background-color-2);
     }
+
+
+#set-explorer table tr {
+    padding-left: -2px;
+    padding-right: -2px;
+}
 
 #set-explorer table tr td {
     position: -webkit-sticky;
@@ -150,14 +158,34 @@ body {
 .delete-set {
     grid-row: 1;
     grid-column: 1;
-    background-color: red;
+    background-color: var(--box-background-color);
+    border: 2px solid var(--title-background-color);
+    border-right-width: 1px;
 }
+
+    .delete-set div {
+        height: 100%;
+        width: 100%;
+        background-color: var(--title-background-color);
+        clip-path: polygon(20% 30%, 40% 50%, 20% 70%, 30% 80%, 50% 60%, 70% 80%, 80% 70%, 60% 50%, 80% 30%, 70% 20%, 50% 40%, 30% 20%)
+    }
 
 .edit-set {
     grid-row: 1;
     grid-column: 2;
-    background-color: yellow;
+    background-color: var(--box-background-color);
+    border: 2px solid var(--title-background-color);
+    border-left-width: 1px;
+    border-right-width: 1px;
 }
+
+    /* Polygon styling*/
+    .edit-set div {
+        height: 100%;
+        width: 100%;
+        clip-path: polygon(66% 10%, 79% 20%, 71% 30%, 59% 21%, 71% 30%, 41% 78%, 25% 90%, 26% 71%, 59% 21%);
+        background-color: var(--title-background-color);
+    }
 
 .set-arrows {
     grid-row: 1;
@@ -170,13 +198,40 @@ body {
 .set-up-arrow {
     grid-row: 1;
     grid-column: 1;
-    background-color: lime;
+    background-color: var(--box-background-color);
+    border: 2px solid var(--title-background-color);
+    border-left-width: 1px;
+    border-bottom-width: 1px;
 }
+
+    /* Up arrow polygon*/
+    .set-up-arrow div {
+        height: 100%;
+        width: 100%;
+        clip-path: polygon(50% 25%, 75% 75%, 25% 75%);
+        background-color: var(--title-background-color);
+    }
 
 .set-down-arrow {
     grid-row: 2;
     grid-column: 1;
-    background-color: blue;
+    background-color: var(--box-background-color);
+    border: 2px solid var(--title-background-color);
+    border-left-width: 1px;
+    border-top-width: 1px;
+}
+
+    /* Down arrow polygon*/
+    .set-down-arrow div {
+        height: 100%;
+        width: 100%;
+        clip-path: polygon( 50% 75%, 75% 25%, 25% 25% );
+        background-color: var(--title-background-color);
+    }
+
+.set-up-arrow, .set-down-arrow {
+    font-size: 8px;
+    font-stretch: 200%;
 }
 
 #set-explorer-bottom-bar {
@@ -511,6 +566,10 @@ body {
     #set-builder h1 {
         border: 2px solid var(--box-border-color);
         border-radius: 8px;
+    }
+
+    #set-builder-title {
+        height: 44px; 
     }
 
     #set-form {

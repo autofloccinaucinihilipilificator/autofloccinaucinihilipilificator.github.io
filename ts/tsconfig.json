@@ -5,6 +5,7 @@
     "target": "ES2019"
   },
   "files": [
-    "VocabPracticeTool.ts"
+    "VocabPracticeTool.ts",
+    "Site.ts"
   ]
 }

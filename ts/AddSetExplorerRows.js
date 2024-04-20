@@ -7,11 +7,11 @@ for (let i = 0; i < 128; i++) {
     <td class="set-col"><button type="button"></button></td>
     <td class="button-col">
         <div class="set-buttons">
-            <div class="delete-set"></div>
-            <div class="edit-set"></div>
+            <div class="delete-set" title="Delete set"><div></div></div>
+            <div class="edit-set" title="Edit set"><div><div></div></div></div>
             <div class="set-arrows">
-                <div class="set-up-arrow"></div>
-                <div class="set-down-arrow"></div>
+                <div class="set-up-arrow" title="Move set up"><div></div></div>
+                <div class="set-down-arrow" title="Move set down"><div></div></div>
             </div>
         </div>
     </td>
