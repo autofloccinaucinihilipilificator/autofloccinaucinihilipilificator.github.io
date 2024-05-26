@@ -15,6 +15,7 @@ class Prompter {
             toggleTermSelectionView: document.getElementById('toggle-term-selection-view'),
             selectTermsHeader: document.getElementById('select-terms-header'),
             showAnswer: document.getElementById('show-answer'),
+            newPrompt: document.getElementById('new-prompt'),
             promptSettingsForm: document.getElementById('prompt-settings-form'),
         };
         this.siteSettings = siteSettings;
@@ -30,6 +31,9 @@ class Prompter {
         });
         this.html.showAnswer.addEventListener('click', (e) => {
             this.showAnswer();
+        });
+        this.html.newPrompt.addEventListener('click', (e) => {
+            this.newPrompt();
         });
         this.html.promptSettingsForm.addEventListener('change', (e) => {
             this.updatePromptSettings();

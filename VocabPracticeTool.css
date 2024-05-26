@@ -374,14 +374,30 @@ body {
         min-height: 28px;
         border: 2px solid var(--box-border-color);
         border-radius: 8px;
-        display: grid;
+        display: flex;
+        flex-direction: row;
+        overflow: hidden;
     }
 
         #buttons button {
             background-color: var(--input-field-background-color);
-            font-size: 16px;
+            font-size: 12px;
             font-family: Verdana, Geneva, Tahoma, sans-serif;
-            border-radius: 6px;
+            flex: 1;
+            border-left: 1px solid var(--box-border-color);
+            border-right: 1px solid var(--box-border-color);
+        }
+
+        #show-answer {
+/*            border-bottom-left-radius: 6px;
+            border-top-left-radius: 6px;*/
+            border-left: none;
+            margin-left: -2px;
+        }
+
+        #new-prompt {
+            border-right: none;
+            margin-right: -2px;
         }
 
 /* Settings ---------------------------------------------------------------- */

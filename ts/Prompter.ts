@@ -19,6 +19,7 @@
         toggleTermSelectionView: <HTMLButtonElement>document.getElementById('toggle-term-selection-view'),
         selectTermsHeader: document.getElementById('select-terms-header'),
         showAnswer: document.getElementById('show-answer'),
+        newPrompt: document.getElementById('new-prompt'),
         promptSettingsForm: <HTMLFormElement>document.getElementById('prompt-settings-form'),
     }
 
@@ -40,6 +41,10 @@
 
         this.html.showAnswer.addEventListener('click', (e) => {
             this.showAnswer();
+        });
+
+        this.html.newPrompt.addEventListener('click', (e) => {
+            this.newPrompt();
         });
 
         this.html.promptSettingsForm.addEventListener('change', (e) => {
