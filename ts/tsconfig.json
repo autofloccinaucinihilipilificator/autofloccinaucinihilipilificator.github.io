@@ -5,7 +5,13 @@
     "target": "ES2019"
   },
   "files": [
-    "VocabPracticeTool.ts",
+    "Defines.ts",
+    "SiteSettings.ts",
+    "SiteSettingsManager.ts",
+    "Items.ts",
+    "SetManager.ts",
+    "PromptSettings.ts",
+    "Prompter.ts",
     "Site.ts"
   ]
 }
