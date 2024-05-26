@@ -84,22 +84,20 @@ class Folder {
         while (true) {
             currentItem = this.data[i];
             if (i == index) {
-                console.log(0);
                 this.data.splice(i, 1);
+                this.countItems();
                 return;
             }
             else if (currentItem instanceof StudySet) {
-                console.log(1);
                 i++;
             }
             else if ((currentItem as Folder).itemCount < index - i) {
-                console.log(2);
                 i++;
                 index -= (currentItem as Folder).itemCount;
             }
             else {
-                console.log(3);
                 (currentItem as Folder).deleteItem(index - i - 1);
+                this.countItems();
                 return;
             }
         }

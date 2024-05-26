@@ -1,6 +1,7 @@
 ﻿const defines = {
     PROMPT_CATEGORY_START: 0, // position within settings form
     IGNORE_WHITESPACE_START: 6,
+    MAX_ITEM_COUNT: 128,
 };
 
 enum PromptCategory {

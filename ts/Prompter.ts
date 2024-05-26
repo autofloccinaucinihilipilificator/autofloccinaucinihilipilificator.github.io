@@ -7,6 +7,7 @@
     currentTermId: number = -1;
     termSelectionDisplayed: boolean = true;
     promptingTerms: boolean;
+    acceptingResponses: boolean = false;
 
     html = {
         promptDisplay: document.getElementById('prompt-display'),
@@ -57,6 +58,8 @@
     }
 
     loadSet(set: StudySet) {
+        this.acceptingResponses = true;
+
         this.html.selectTermsHeader.style.borderBottom = '2px solid black';
         this.html.selectTermsHeader.style.borderBottomLeftRadius = '0';
         this.html.selectTermsHeader.style.borderBottomRightRadius = '0';
@@ -149,29 +152,31 @@
     }
 
     processResponse(): Promise<void> {
-        this.html.inputForm.classList.remove('correct');
-        this.html.inputForm.classList.remove('incorrect');
+        if (this.acceptingResponses) {
+            this.html.inputForm.classList.remove('correct');
+            this.html.inputForm.classList.remove('incorrect');
 
-        const input = this.html.inputBox.value;
+            const input = this.html.inputBox.value;
 
-        void this.html.inputBox.offsetWidth;
+            void this.html.inputBox.offsetWidth;
 
-        this.html.answerDisplay.style.visibility = 'hidden';
-
-        if (this.checkIfCorrect(input)) {
-            this.html.inputForm.classList.add('correct');
-            this.html.inputForm.reset();
             this.html.answerDisplay.style.visibility = 'hidden';
-            this.html.promptDisplay.style.visibility = 'hidden';
-            this.newPrompt();
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve();
-                }, this.promptSettings.newPromptDelay);
-            });
-        }
-        else {
-            this.html.inputForm.classList.add('incorrect');
+
+            if (this.checkIfCorrect(input)) {
+                this.html.inputForm.classList.add('correct');
+                this.html.inputForm.reset();
+                this.html.answerDisplay.style.visibility = 'hidden';
+                this.html.promptDisplay.style.visibility = 'hidden';
+                this.newPrompt();
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve();
+                    }, this.promptSettings.newPromptDelay);
+                });
+            }
+            else {
+                this.html.inputForm.classList.add('incorrect');
+            }
         }
     }
 
@@ -347,5 +352,12 @@
                 this.promptSettings.ignoreWhitespace = i;
             }
         }
+    }
+
+    deselectSet() {
+        this.acceptingResponses = false;
+        this.html.promptDisplay.innerHTML = 'Select a set on the left';
+        this.html.answerDisplay.innerHTML = 'If you haven\'t made one yet, click the "New set" button in the bottom left';
+        this.html.answerDisplay.style.visibility = 'visible';
     }
 }

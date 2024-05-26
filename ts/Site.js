@@ -19,5 +19,17 @@ class Site {
     loadSet(index) {
         this.prompter.loadSet(this.setManager.selectSet(index));
     }
+    deleteItem(index) {
+        this.setManager.deleteItem(index);
+        if (index == this.setManager.selectedSetIndex) {
+            this.setManager.deselectSet();
+            this.prompter.deselectSet();
+        }
+        else if (index < this.setManager.selectedSetIndex) {
+            this.setManager.deselectSet();
+            this.setManager.selectedSetIndex -= 1;
+            this.setManager.selectSet(this.setManager.selectedSetIndex);
+        }
+    }
 }
 const site = new Site();

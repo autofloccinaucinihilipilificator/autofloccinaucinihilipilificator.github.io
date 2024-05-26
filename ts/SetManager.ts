@@ -110,7 +110,8 @@
     }
 
     deleteItem(index: number): void {
-
+        this.setList.deleteItem(index);
+        this.updateSetList();
     }
 
     editItem(index: number): void {
@@ -132,7 +133,7 @@
     <td class="set-col"><button type="button" title="${this.setList.getItem(i).description}" onclick="site.loadSet(${i})">${this.setList.getItem(i).title}</button></td>
     <td class="button-col">
         <div class="set-buttons">
-            <div class="delete-set" title="Delete set"><div></div></div>
+            <div class="delete-set" title="Delete set" onclick="site.deleteItem(${i})"><div></div></div>
             <div class="edit-set" title="Edit set"><div><div></div></div></div>
             <div class="set-arrows">
                 <div class="set-up-arrow" title="Move set up"><div></div></div>
@@ -141,10 +142,20 @@
         </div>
     </td>`
         }
+        for (let i = this.setList.itemCount; i < defines.MAX_ITEM_COUNT; i++) {
+            this.html.setListRows[i].innerHTML = `<tr style="background-color: var(--set-background-color-${i % 2 == 1 ? 2 : 1});">
+    <td class="set-col"><button type="button"></button></td>
+    <td class="button-col"></td>
+</tr>`
+        }
     }
 
     exitSetBuilder() {
         this.html.setBuilder.style.visibility = 'hidden';
         this.html.setForm.reset();
+    }
+
+    deselectSet() {
+        this.html.setListRows[this.selectedSetIndex].classList.remove('selected');
     }
 }
