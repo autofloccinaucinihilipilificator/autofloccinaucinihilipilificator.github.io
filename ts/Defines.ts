@@ -5,8 +5,8 @@
 
 enum PromptCategory {
     terms = defines.PROMPT_CATEGORY_START,
-    defs = defines.IGNORE_WHITESPACE_START + 1,
-    both = defines.IGNORE_WHITESPACE_START + 2,
+    defs = defines.PROMPT_CATEGORY_START + 1,
+    both = defines.PROMPT_CATEGORY_START + 2,
 }
 
 // Nominals based on position of inputs in form

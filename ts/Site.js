@@ -7,10 +7,10 @@ class Site {
         this.siteSettingsManager = new SiteSettingsManager({
             animations: AnimationSetting.on
         });
-        this.setManager = new SetManager([], this.siteSettingsManager.settings);
+        this.setManager = new SetManager(new Folder("My Sets", "Your very own sets. Happy studying!", []), this.siteSettingsManager.settings);
         this.prompter = new Prompter(this.siteSettingsManager.settings);
         window.addEventListener('beforeunload', (e) => {
-            if (this.setManager.setList.length !== 0) {
+            if (this.setManager.setList.itemCount !== 0) {
                 e.preventDefault();
                 e.returnValue = '';
             }

@@ -6,8 +6,8 @@ const defines = {
 var PromptCategory;
 (function (PromptCategory) {
     PromptCategory[PromptCategory["terms"] = defines.PROMPT_CATEGORY_START] = "terms";
-    PromptCategory[PromptCategory["defs"] = defines.IGNORE_WHITESPACE_START + 1] = "defs";
-    PromptCategory[PromptCategory["both"] = defines.IGNORE_WHITESPACE_START + 2] = "both";
+    PromptCategory[PromptCategory["defs"] = defines.PROMPT_CATEGORY_START + 1] = "defs";
+    PromptCategory[PromptCategory["both"] = defines.PROMPT_CATEGORY_START + 2] = "both";
 })(PromptCategory || (PromptCategory = {}));
 // Nominals based on position of inputs in form
 var IgnoreWhitespace;

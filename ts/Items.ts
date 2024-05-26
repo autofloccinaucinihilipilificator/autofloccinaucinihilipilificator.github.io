@@ -36,12 +36,12 @@ class Folder {
         this.data = data;
         this.title = title;
         this.description = description;
-        this.itemCount = this.countItems();
+        this.countItems();
     }
 
-    countItems(): number {
+    countItems(): void {
         if (this.data.every(item => { item instanceof StudySet; })) {
-            return this.data.length;
+            this.itemCount = this.data.length;
         }
         else {
             let i: number = 0;
@@ -53,7 +53,7 @@ class Folder {
                     i += item.itemCount + 1;
                 }
             });
-            return i;
+            this.itemCount = i;
         }
     }
 

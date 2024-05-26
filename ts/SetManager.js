@@ -69,7 +69,8 @@ class SetManager {
             }
         }
         if (validTitle && validData) {
-            this.setList.push(new StudySet(this.html.setTitleInput.value, this.html.setDescriptionInput.value, this.html.setDataInput.value));
+            this.setList.data.push(new StudySet(this.html.setTitleInput.value, this.html.setDescriptionInput.value, this.html.setDataInput.value));
+            this.setList.countItems();
             this.updateSetList();
             this.html.setBuilder.style.visibility = 'hidden';
             this.html.setForm.reset();
@@ -99,13 +100,12 @@ class SetManager {
         }
         this.html.setListRows[index].classList.add('selected');
         this.selectedSetIndex = index;
-        return this.setList[index];
+        return this.setList.getItem(index);
     }
     updateSetList() {
-        for (let i = 0; i < this.setList.length; i++) {
-            // `<button title="${this.setList[i].description}" onclick="site.loadSet(${i});">${this.setList[i].title}</button>`;
+        for (let i = 0; i < this.setList.itemCount; i++) {
             this.html.setListRows[i].innerHTML = `
-    <td class="set-col"><button type="button" title="${this.setList[i].description}" onclick="site.loadSet(${i})">${this.setList[i].title}</button></td>
+    <td class="set-col"><button type="button" title="${this.setList.getItem(i).description}" onclick="site.loadSet(${i})">${this.setList.getItem(i).title}</button></td>
     <td class="button-col">
         <div class="set-buttons">
             <div class="delete-set" title="Delete set"><div></div></div>
