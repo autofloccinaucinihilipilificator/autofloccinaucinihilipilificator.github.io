@@ -7,5 +7,15 @@ Enter the hypothetical vote share for each party using its input box or slider. 
 
 It's a website hosted on Github Pages.
 
-The default is currently the party list for the 2023 )
+- Implement folders
+- Implement buttons
+- Style buttons
+- Implement downloading and uploading sets
 
+Later:
+
+- Style checkboxes & radios in settings
+- Dynamically add rows to the set builder
+- Add accessibility settings
+- Add website customization
+- Add saving sets & settings across sessions

@@ -15,3 +15,25 @@ term 8; def 8 (asdf)
 term 9; def 9
 term 10; def 10 (asdf)
 term 11; def 11
+
+const testFolder = new Folder("title", "desc", [
+	new StudySet("0", "", ""),
+	new StudySet("1", "", ""),
+	new StudySet("2", "", ""),
+	new Folder("3", "", [
+		new StudySet("4", "", ""),
+		new StudySet("5", "", ""),
+		new Folder("6", "", [
+			new StudySet("7", "", ""),
+			new StudySet("8", "", ""),
+		]),
+		new StudySet("9", "", ""),
+		new Folder("10", "", [
+			new StudySet("11", "", ""),
+			new StudySet("12", "", ""),
+			new StudySet("13", "", ""),
+		]),
+		new StudySet("14", "", ""),
+	]),
+	new StudySet("15", "", "")
+]);
