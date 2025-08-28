@@ -1,7 +1,7 @@
 class Site {
 
   // mapManager: MapManager;
-  parliamentChartManager: ParliamentChartManager;
+  // parliamentChartManager: ParliamentChartManager;
   partyListManager: PartyListManager;
   // pieChartManager: PieChartManager;
 
@@ -78,7 +78,7 @@ class Site {
       this.partyListManager.parties[13], // PVV
     ]);
 
-    this.parliamentChartManager = new ParliamentChartManager();
+    // this.parliamentChartManager = new ParliamentChartManager();
   }
 }
 const site: Site = new Site();
