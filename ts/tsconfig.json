@@ -5,6 +5,12 @@
     "target": "ES2019"
   },
   "files": [
-    "VocabPracticeTool.ts"
+    "Coalition.ts",
+    "MapManager.ts",
+    "ParliamentChartManager.ts",
+    "Party.ts",
+    "PartyListManager.ts",
+    "PieChartManager.ts",
+    "Site.ts",
   ]
 }
