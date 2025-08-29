@@ -65,7 +65,13 @@ class Site {
             this.partyListManager.parties[10], // BBB
             this.partyListManager.parties[13], // PVV
         ]);
-        this.parliamentChartManager = new ParliamentChartManager();
+        this.parliamentChartManager = new ParliamentChartManager(7, // rowCount
+        150, // totalSeats
+        100, // innerRadius
+        200, // outerRadius
+        [250, 50], // centerPosition
+        this.partyListManager.parties // parties
+        );
     }
 }
 const site = new Site();

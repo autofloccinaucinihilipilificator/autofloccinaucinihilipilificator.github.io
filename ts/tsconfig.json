@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "alwaysStrict": true,
+    "lib": [ "es6", "dom", "es2021" ],
+    "target": "ES2019",
+  },
+
+  "include": [
+    "Coalition.ts",
+    "MapManager.ts",
+    "ParliamentChartManager.ts",
+    "Party.ts",
+    "PartyListManager.ts",
+    "PieChartManager.ts",
+    "Point.ts",
+    "Site.ts",
+  ],
+}
