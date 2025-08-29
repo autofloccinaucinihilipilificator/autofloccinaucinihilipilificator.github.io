@@ -43,14 +43,9 @@ main {
   display: flex;
 }
 
-#too-few-votes #too-many-votes {
-  visibility: hidden;
-  height: 0;
-  flex: 0;
-}
-
 .party-wrapper {
   display: flex;
+  color: white;
 }
 
 .party-text {
@@ -63,6 +58,8 @@ main {
 
 .party-seats {
   flex: 1;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 
 .party-slider {
@@ -70,5 +67,6 @@ main {
 }
 
 #right-bar {
-  flex: 1;
+  flex: 2;
 }
+
