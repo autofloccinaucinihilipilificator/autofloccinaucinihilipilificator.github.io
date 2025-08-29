@@ -21,22 +21,22 @@ class PartyListManager {
     this.totalSeats = totalSeats;
   }
 
-  addParty(title: string, subtitle: string, share: number) {
+  addParty(title: string, subtitle: string, share: number, solidColor: string) {
 
     this.html.partyList.insertAdjacentHTML('beforeend',
       `<div id="party-${this.partyIDCounter}" class="party">
-          <div id="party-${this.partyIDCounter}-wrapper" class="party-wrapper">
+          <div id="party-${this.partyIDCounter}-wrapper" class="party-wrapper" style="background-color: ${solidColor};">
             <div id="party-${this.partyIDCounter}-text" class="party-text">
               <label id="party-${this.partyIDCounter}-title" class="party-title" for="party-${this.partyIDCounter}-input">${title}</label>
               <p id="party-${this.partyIDCounter}-subtitle" class="party-subtitle"><i>${subtitle}</i></p>
             </div>
             <input type="number" min="0" max="100" step="0.01" id="party-${this.partyIDCounter}-share">%</input>
-            <p id="party-${this.partyIDCounter}-seats">seats</p>
+            <p id="party-${this.partyIDCounter}-seats" class="party-seats">seats</p>
           </div>
           <input type="range" min="0" max="100" step="0.01" id="party-${this.partyIDCounter}-slider" class="party-slider"/>
         </div>`);
 
-    this.parties.push(new Party(this.partyIDCounter, title, subtitle, share));
+    this.parties.push(new Party(this.partyIDCounter, title, subtitle, share, solidColor));
 
     this.parties[this.partyIDCounter].html.sliderElement.addEventListener('input', (e) => {
       this.checkTotalVoteShare();
@@ -100,7 +100,7 @@ class PartyListManager {
     this.parties.forEach((party) => {
       party.seats = 0;
       if (party.share > 2 / 3) {
-        tempParties.push(new Party(party.id, party.title, party.subtitle, party.share))
+        tempParties.push(new Party(party.id, party.title, party.subtitle, party.share, party.solidColor))
       }
     });
 

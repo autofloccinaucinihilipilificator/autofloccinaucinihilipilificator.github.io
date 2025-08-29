@@ -1,6 +1,6 @@
 "use strict";
 class Party {
-    constructor(id, title, subtitle, share) {
+    constructor(id, title, subtitle, share, solidColor) {
         this.html = {
             partyElement: null,
             titleElement: null,
@@ -14,6 +14,7 @@ class Party {
         this.subtitle = subtitle;
         this.share = share;
         this.seats = 0;
+        this.solidColor = solidColor;
         this.html.partyElement = document.getElementById(`party-${id}`);
         this.html.titleElement = document.getElementById(`party-${id}-title`);
         this.html.subtitleElement = document.getElementById(`party-${id}-subtitle`);

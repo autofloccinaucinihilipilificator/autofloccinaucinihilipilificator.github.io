@@ -2,14 +2,12 @@ class Point {
   x: number;
   y: number;
   theta: number; // angle between seat and negative x axis
+  radius: number;
 
-  constructor(x: number, y:number) {
-    this.x = x;
-    this.y = y;
-
-    this.theta = Math.atan(-1 * y / x)
-    if (this.theta < 0) {
-      this.theta += Math.PI;
-    }
+  constructor(theta: number, radius: number) {
+    this.theta = theta;
+    this.x = radius * Math.cos(Math.PI - theta);
+    this.y = radius * Math.sin(theta);
+    this.radius = radius
   }
 }

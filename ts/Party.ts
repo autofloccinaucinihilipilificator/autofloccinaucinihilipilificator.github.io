@@ -6,6 +6,9 @@ class Party {
   share: number;
   seats: number;
 
+  solidColor: string;
+  backgroundColor: string;
+
   html = {
     partyElement: null,
     titleElement: null,
@@ -15,13 +18,15 @@ class Party {
     seatsElement: null,
   };
 
-  constructor (id: number, title: string, subtitle: string, share: number) {
+  constructor (id: number, title: string, subtitle: string, share: number, solidColor: string) {
 
     this.id = id;
     this.title = title;
     this.subtitle = subtitle;
     this.share = share;
     this.seats = 0;
+
+    this.solidColor = solidColor;
 
     this.html.partyElement = document.getElementById(`party-${id}`);
     this.html.titleElement = document.getElementById(`party-${id}-title`);
